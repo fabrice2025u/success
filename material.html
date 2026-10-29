@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="unnamed.png">
+    <title>Material Stock Register | PLACOM LTD</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626', // Red 600
+                        primaryDark: '#b91c1c', // Red 700
+                        primaryLight: '#fef2f2', // Red 50
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+<style>
+.role-group-row td { background:#fff5f5; color:#9f1239; font-weight:700; padding:12px 20px; }
+.role-count { color:#9ca3af; font-size:12px; font-weight:500; margin-left:6px; }
+.worker-name { color:#111827; font-weight:600; }
+.role-badge { display:inline-flex; align-items:center; border-radius:999px; background:#fef2f2; color:#b91c1c; padding:5px 10px; font-size:12px; font-weight:600; }
+.salary { font-weight:600; white-space:nowrap; }
+.role-group-row td { background:#fff5f5; color:#9f1239; font-weight:700; padding:12px 20px; }
+.role-count { color:#9ca3af; font-size:12px; font-weight:500; margin-left:6px; }
+.worker-name { color:#111827; font-weight:600; }
+.salary { font-weight:600; white-space:nowrap; }
+#loading { display:block; }
+
+#salaryRecordTableBody td { padding: 15px 20px; border-bottom: 1px solid #f3f4f6; }
+#salaryRecordTableBody .worker-name { color: #111827; font-weight: 600; }
+#salaryRecordTableBody .salary { color: #991b1b; font-weight: 700; white-space: nowrap; }
+#salaryRecordTableBody tr:hover td { background: #fafafa; }
+#salaryRecordTableBody td[rowspan] { background: #fff5f5; color: #9f1239; }
+#attendanceTableBody td { padding: 15px 20px; border-bottom: 1px solid #f3f4f6; }
+#attendanceTableBody tr:hover td { background: #fafafa; }
+#attendanceTableBody .worker-name { color: #111827; font-weight: 600; }
+#attendanceTableBody td[rowspan] { background: #fff5f5; color: #9f1239; }
+.attendance-date-cell { vertical-align: middle; font-weight: 700; white-space: nowrap; text-align: center; }
+.status-badge { display: inline-flex; align-items: center; border-radius: 999px; padding: 5px 10px; font-size: 12px; font-weight: 700; text-transform: capitalize; white-space: nowrap; }
+.status-present { background: #dcfce7; color: #166534; }
+.status-absent { background: #fee2e2; color: #991b1b; }
+.status-late { background: #fef3c7; color: #92400e; }
+.status-leave { background: #dbeafe; color: #1d4ed8; }
+</style>
+
+<style>
+:root{--material-red:#dc2626}.summary-card{display:flex;align-items:center;gap:1rem;background:#fff;border:1px solid #e5e7eb;border-radius:1rem;padding:1.25rem;box-shadow:0 1px 2px rgba(0,0,0,.03)}.summary-icon{width:2.75rem;height:2.75rem;flex-shrink:0;border-radius:.85rem;display:flex;align-items:center;justify-content:center;font-size:1.15rem}.summary-label{font-size:.8rem;color:#6b7280;font-weight:500}.summary-value{font-size:1.55rem;line-height:1.9rem;font-weight:750;color:#111827;margin-top:.15rem}.summary-note{font-size:.7rem;color:#9ca3af;margin-top:.15rem}.material-name{display:block;font-weight:700;color:#111827}.material-code{display:block;font-size:.72rem;color:#9ca3af;margin-top:.2rem}.material-description{max-width:230px;color:#6b7280;white-space:normal}.material-number{color:#9ca3af}.stock-number,.current-quantity{font-variant-numeric:tabular-nums;text-align:right;font-weight:600;color:#374151}.stock-unit{color:#6b7280}.movement-in{color:#059669;font-weight:650;text-align:right}.movement-out{color:#dc2626;font-weight:650;text-align:right}.low-stock{background:#fffbeb}.inactive-row{opacity:.68}.active-badge,.inactive-badge,.low-stock-badge{display:inline-flex;align-items:center;padding:.35rem .6rem;border-radius:999px;font-size:.7rem;font-weight:700;white-space:nowrap}.active-badge{background:#dcfce7;color:#166534}.inactive-badge{background:#f3f4f6;color:#6b7280}.low-stock-badge{background:#fef3c7;color:#92400e}.table-actions{display:flex;gap:.45rem}.table-action{border:1px solid #e5e7eb;border-radius:.55rem;padding:.4rem .65rem;font-size:.75rem;font-weight:700;background:#fff}.table-action.view{color:#2563eb}.table-action.edit{color:#dc2626}.table-action:hover{background:#f9fafb}.modal-overlay{display:none;position:fixed;inset:0;z-index:100;background:rgba(17,24,39,.55);padding:1rem;overflow-y:auto;align-items:center;justify-content:center;backdrop-filter:blur(3px)}.modal-overlay.show{display:flex}.modal-panel{width:100%;max-width:680px;max-height:calc(100vh - 2rem);overflow-y:auto;background:white;border-radius:1.25rem;box-shadow:0 24px 60px rgba(0,0,0,.2);animation:modalIn .18s ease-out}.modal-wide{max-width:1150px}.modal-close{width:2.25rem;height:2.25rem;display:flex;align-items:center;justify-content:center;border-radius:.7rem;color:#6b7280;background:#f9fafb;flex-shrink:0}.modal-close:hover{background:#fee2e2;color:#dc2626}.form-label{display:block;font-size:.8rem;font-weight:650;color:#374151;margin-bottom:.45rem}.form-input{display:block;width:100%;border:1px solid #d1d5db;border-radius:.7rem;padding:.72rem .8rem;font-size:.875rem;color:#111827;background:white;outline:none}.form-input:focus{border-color:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,.1)}.detail-stat{padding:1rem;border:1px solid #e5e7eb;background:#fafafa;border-radius:.85rem}.detail-stat p{font-size:.75rem;color:#6b7280}.detail-stat strong{display:block;font-size:1.1rem;color:#111827;margin-top:.35rem;overflow-wrap:anywhere}.transaction-type{display:inline-flex;padding:.3rem .55rem;border-radius:.45rem;font-size:.7rem;font-weight:750}.transaction-type.in{background:#dcfce7;color:#166534}.transaction-type.out{background:#fee2e2;color:#991b1b}.transaction-type.initial{background:#dbeafe;color:#1d4ed8}.transaction-type.adjustment{background:#f3e8ff;color:#7e22ce}@keyframes modalIn{from{opacity:0;transform:translateY(8px) scale(.99)}to{opacity:1;transform:translateY(0) scale(1)}}@media(max-width:640px){.modal-overlay{padding:.5rem}.modal-panel{max-height:calc(100vh - 1rem);border-radius:1rem}.summary-card{padding:1rem}}
+</style>
+
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- Top Mobile Header Bar -->
+    <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 lg:hidden z-30 shrink-0">
+        <div class="flex items-center space-x-3">
+            <button id="hamburgerBtn" class="text-gray-700 hover:text-primary focus:outline-none p-2 rounded-lg transition">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <span class="font-bold text-lg text-gray-900 tracking-wide">PLACOM LTD Dashboard</span>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button
+        onclick="window.location.href='register.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primaryDark text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow transition">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Register</span>
+    </button>
+        </div>
+    </header>
+
+    <!-- Main Wrapper (Sidebar + Body Area) -->
+    <div class="flex flex-1 overflow-hidden relative">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 lg:static lg:inset-auto transition-transform duration-300 ease-in-out flex flex-col shadow-lg lg:shadow-none">
+            <!-- Sidebar Header / Logo -->
+            <div class="h-16 flex items-center justify-between px-6 bg-primary text-white shrink-0 shadow-inner">
+                <div class="flex items-center space-x-2">
+                    <div class="bg-white text-primary p-2 rounded-lg font-bold flex items-center justify-center w-8 h-8 shadow">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <span class="font-bold text-lg tracking-wide">AdminPortal</span>
+                </div>
+                <button id="closeSidebar" class="text-white hover:text-gray-200 lg:hidden focus:outline-none">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links Scrollable Area -->
+            <nav class="flex-1 overflow-y-auto px-4 py-4 space-y-1.5">
+              
+                <a href="worker.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-users w-6 text-center mr-3 text-lg"></i>
+                    Worker
+                </a>
+                <a href="attendance.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-user-check w-6 text-center mr-3 text-lg"></i>
+                    Attendance
+                </a>
+                <a href="special-case.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-triangle-exclamation w-6 text-center mr-3 text-lg"></i>
+                    Special-case
+                </a>
+                <a href="salary.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-wallet w-6 text-center mr-3 text-lg"></i>
+                    Salary
+                </a>
+                <a href="salary-record.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-file-invoice-dollar w-6 text-center mr-3 text-lg"></i>
+                    Salary Record
+                </a>
+                
+                 <a href="attendance-record.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-file-invoice-dollar w-6 text-center mr-3 text-lg"></i>
+                    Attendance Record
+                </a>
+
+                <!-- Stock Submenu Dropdown -->
+                <div class="space-y-1">
+                    <button id="stockToggle" class="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold rounded-xl text-white bg-primary shadow-md transition group focus:outline-none">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-boxes-stacked w-6 text-center mr-3 text-lg"></i>
+                            <span>Stock</span>
+                        </div>
+                        <i id="stockChevron" class="fa-solid fa-chevron-down text-xs transition-transform duration-200 rotate-180"></i>
+                    </button>
+                    <!-- Submenu Items -->
+                    <div id="stockSubmenu" class="pl-11 pr-2 space-y-1">
+                        <a href="material.html" class="block px-3 py-2 text-xs font-semibold text-primary bg-red-50 rounded-lg transition">
+                            <i class="fa-solid fa-box mr-2"></i> material
+                        </a>
+                        <a href="movement.html" class="block px-3 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-primaryLight rounded-lg transition">
+                            <i class="fa-solid fa-right-left mr-2"></i> movement
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Sidebar Footer Actions (Register & Logout) -->
+            <div class="p-4 border-t border-gray-200 space-y-2 bg-gray-50 shrink-0">
+    <button
+        onclick="window.location.href='register.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primaryDark text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow transition">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Register</span>
+    </button>
+
+    <button
+        onclick="window.location.href='index.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 py-2.5 px-4 rounded-xl text-sm font-semibold transition">
+        <i class="fa-solid fa-right-from-bracket text-red-600"></i>
+        <span>Logout</span>
+    </button>
+</div>
+        </aside>
+
+        <!-- Backdrop for mobile sidebar -->
+        <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden transition-opacity"></div>
+
+        <!-- Main Content Area & Footer Container -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Body Area (Scrollable Main Content) -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-gray-50">
+  <div class="max-w-7xl mx-auto space-y-6">
+    <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+      <div><p class="text-sm font-semibold text-primary uppercase tracking-wider">Inventory Management</p><h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">Material Stock Register</h1><p class="text-sm text-gray-500 mt-2">Manage material details, monitor stock balances, and review incoming and outgoing transactions.</p></div>
+      <div class="flex flex-wrap gap-2"><button type="button" onclick="loadMaterialSystem()" class="inline-flex items-center gap-2 border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 font-semibold text-sm px-4 py-3 rounded-xl shadow-sm"><i class="fa-solid fa-rotate-right"></i> Refresh</button><button type="button" onclick="openMaterialModal()" class="inline-flex items-center gap-2 bg-primary hover:bg-red-700 text-white font-semibold text-sm px-5 py-3 rounded-xl shadow-sm"><i class="fa-solid fa-plus"></i> Add Material</button></div>
+    </div>
+    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+      <div class="summary-card"><div class="summary-icon bg-red-50 text-primary"><i class="fa-solid fa-boxes-stacked"></i></div><div><p class="summary-label">Total materials</p><p id="summaryMaterials" class="summary-value">—</p><p class="summary-note">Registered items</p></div></div>
+      <div class="summary-card"><div class="summary-icon bg-blue-50 text-blue-600"><i class="fa-solid fa-layer-group"></i></div><div><p class="summary-label">Initial quantity</p><p id="summaryInitial" class="summary-value">—</p><p class="summary-note">Across all materials</p></div></div>
+      <div class="summary-card"><div class="summary-icon bg-emerald-50 text-emerald-600"><i class="fa-solid fa-arrow-down"></i></div><div><p class="summary-label">Total stock in</p><p id="summaryIn" class="summary-value">—</p><p class="summary-note">Incoming quantity</p></div></div>
+      <div class="summary-card"><div class="summary-icon bg-amber-50 text-amber-600"><i class="fa-solid fa-triangle-exclamation"></i></div><div><p class="summary-label">Low stock items</p><p id="summaryLow" class="summary-value">—</p><p class="summary-note">At or below minimum</p></div></div>
+    </div>
+    <div class="bg-white rounded-2xl border border-gray-200 shadow-sm p-4 sm:p-5">
+      <div class="flex flex-col lg:flex-row lg:items-end gap-4">
+        <div class="flex-1"><label for="materialSearch" class="block text-sm font-semibold text-gray-700 mb-2">Search materials</label><div class="relative"><i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i><input id="materialSearch" type="search" placeholder="Search name, code, category, unit..." class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 focus:border-primary focus:ring-2 focus:ring-red-100 outline-none text-sm" autocomplete="off"></div></div>
+        <div class="w-full lg:w-56"><label for="categoryFilter" class="block text-sm font-semibold text-gray-700 mb-2">Category</label><select id="categoryFilter" class="w-full px-3 py-3 rounded-xl border border-gray-200 bg-white text-sm focus:border-primary outline-none"><option value="">All categories</option></select></div>
+        <div class="w-full lg:w-48"><label for="statusFilter" class="block text-sm font-semibold text-gray-700 mb-2">Stock status</label><select id="statusFilter" class="w-full px-3 py-3 rounded-xl border border-gray-200 bg-white text-sm focus:border-primary outline-none"><option value="">All statuses</option><option value="active">Active</option><option value="inactive">Inactive</option><option value="low">Low stock</option></select></div>
+        <button type="button" onclick="clearFilters()" class="inline-flex justify-center items-center gap-2 px-4 py-3 rounded-xl border border-gray-200 text-gray-600 hover:bg-gray-50 text-sm font-semibold"><i class="fa-solid fa-filter-circle-xmark"></i> Clear filters</button>
+      </div><div class="mt-4 pt-3 border-t border-gray-100 flex items-center justify-between gap-3"><p class="text-xs text-gray-500">Filter by material name, code, description, category, or unit.</p><span id="filterCount" class="text-xs font-semibold text-gray-600 bg-gray-100 px-3 py-1.5 rounded-full">0 materials</span></div>
+    </div>
+    <div id="materialsError" class="rounded-xl border border-red-200 bg-red-50 text-red-700 p-4 text-sm" role="alert" style="display:none"></div>
+    <section class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+      <div class="p-5 sm:p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2"><div><h2 class="text-lg font-bold text-gray-900">Materials</h2><p class="text-sm text-gray-500 mt-1">Stock quantities and material master details.</p></div><span class="inline-flex items-center gap-2 text-xs font-semibold text-gray-500 bg-gray-50 border border-gray-200 rounded-full px-3 py-2"><i class="fa-solid fa-database"></i> Live stock data</span></div>
+      <div id="materialsLoading" class="p-12 text-center text-gray-500"><i class="fa-solid fa-spinner fa-spin text-primary text-2xl"></i><p class="mt-3 text-sm">Loading materials...</p></div>
+      <div id="materialsEmpty" class="p-12 text-center" style="display:none"><div class="w-14 h-14 mx-auto rounded-2xl bg-gray-100 text-gray-400 flex items-center justify-center text-2xl"><i class="fa-solid fa-box-open"></i></div><h3 class="font-semibold text-gray-800 mt-4">No materials found</h3><p class="text-sm text-gray-500 mt-1">Try changing your filters or add a new material.</p><button onclick="openMaterialModal()" class="mt-4 text-sm font-semibold text-primary hover:underline">+ Add a material</button></div>
+      <div id="materialsTableContainer" class="overflow-x-auto" style="display:none"><table class="w-full text-left text-sm min-w-[1120px]"><thead class="bg-gray-50 text-gray-500 uppercase text-xs tracking-wider"><tr><th class="px-4 py-4 text-center">#</th><th class="px-4 py-4">Material</th><th class="px-4 py-4">Description</th><th class="px-4 py-4 text-right">Initial</th><th class="px-4 py-4">Unit</th><th class="px-4 py-4 text-right">Stock in</th><th class="px-4 py-4 text-right">Stock out</th><th class="px-4 py-4 text-right">Current</th><th class="px-4 py-4">Current unit</th><th class="px-4 py-4">Status</th><th class="px-4 py-4">Actions</th></tr></thead><tbody id="materialsTableBody" class="divide-y divide-gray-100"></tbody></table></div>
+    </section>
+   
+  </div>
+</main>
+
+<!-- Add/Edit Material Modal -->
+<div id="materialModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="materialModalTitle">
+ <div class="modal-panel"><div class="flex items-start justify-between gap-4 px-6 py-5 border-b border-gray-100"><div><h2 id="materialModalTitle" class="text-xl font-bold text-gray-900">Add Material</h2><p id="materialModalSubtitle" class="text-sm text-gray-500 mt-1">Create a material record for the stock register.</p></div><button type="button" onclick="closeMaterialModal()" class="modal-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
+ <form id="materialForm" class="p-6 space-y-5"><div id="materialFormError" class="rounded-lg border border-red-200 bg-red-50 text-red-700 px-3 py-2 text-sm" style="display:none" role="alert"></div>
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4"><div><label for="materialCode" class="form-label">Material code <span class="text-red-600">*</span></label><input id="materialCode" class="form-input" placeholder="e.g. MAT-001" required></div><div><label for="materialName" class="form-label">Material name <span class="text-red-600">*</span></label><input id="materialName" class="form-input" placeholder="Enter material name" required></div>
+  <div class="sm:col-span-2"><label for="materialDescription" class="form-label">Description</label><textarea id="materialDescription" rows="2" class="form-input" placeholder="Short description (optional)"></textarea></div><div><label for="materialCategory" class="form-label">Category</label><input id="materialCategory" class="form-input" placeholder="e.g. Construction"></div><div><label for="materialUnit" class="form-label">Unit <span class="text-red-600">*</span></label><input id="materialUnit" class="form-input" placeholder="e.g. pcs, kg, bags" required></div><div><label for="initialQuantity" class="form-label">Initial quantity</label><input id="initialQuantity" type="number" min="0" step="0.001" value="0" class="form-input" required></div><div><label for="minimumStock" class="form-label">Minimum stock alert</label><input id="minimumStock" type="number" min="0" step="0.001" value="0" class="form-input" required></div><div class="sm:col-span-2"><label for="materialActive" class="form-label">Status</label><select id="materialActive" class="form-input"><option value="true">Active</option><option value="false">Inactive</option></select></div></div>
+  <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-4 border-t border-gray-100"><button type="button" onclick="closeMaterialModal()" class="px-5 py-3 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm hover:bg-gray-50">Cancel</button><button id="materialSaveButton" type="submit" class="px-5 py-3 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-red-700 disabled:opacity-60"><i class="fa-solid fa-floppy-disk mr-2"></i>Save Material</button></div>
+ </form></div>
+</div>
+
+<!-- Material Details Modal -->
+<div id="detailsModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="detailsTitle"><div class="modal-panel modal-wide"><div class="flex items-start justify-between gap-4 px-6 py-5 border-b border-gray-100"><div><p class="text-xs font-semibold text-primary uppercase tracking-wider">Stock details</p><h2 id="detailsTitle" class="text-xl font-bold text-gray-900 mt-1">Material</h2><p id="detailsSubtitle" class="text-sm text-gray-500 mt-1"></p></div><button type="button" onclick="closeDetailsModal()" class="modal-close" aria-label="Close"><i class="fa-solid fa-xmark"></i></button></div>
+ <div class="p-6 space-y-6"><div class="grid grid-cols-2 lg:grid-cols-4 gap-3"><div class="detail-stat"><p>Initial quantity</p><strong id="detailsInitial">—</strong></div><div class="detail-stat"><p>Stock in</p><strong id="detailsIn" class="text-emerald-600">—</strong></div><div class="detail-stat"><p>Stock out</p><strong id="detailsOut" class="text-red-600">—</strong></div><div class="detail-stat"><p>Current stock</p><strong id="detailsCurrent" class="text-primary">—</strong></div></div>
+ <div><div class="flex items-center justify-between gap-3 mb-3"><div><h3 class="font-bold text-gray-900">Transaction history</h3><p class="text-xs text-gray-500 mt-1">Newest transactions appear first.</p></div></div><div id="transactionEmpty" class="rounded-xl bg-gray-50 border border-gray-100 p-8 text-center text-sm text-gray-500" style="display:none">No stock transactions found for this material.</div><div class="overflow-x-auto border border-gray-100 rounded-xl"><table class="w-full min-w-[900px] text-sm text-left"><thead class="bg-gray-50 text-gray-500 text-xs uppercase"><tr><th class="px-4 py-3">Date</th><th class="px-4 py-3">Type</th><th class="px-4 py-3 text-right">Quantity</th><th class="px-4 py-3">Supplier</th><th class="px-4 py-3">Project</th><th class="px-4 py-3">Issued to</th><th class="px-4 py-3">Reason / Notes</th></tr></thead><tbody id="transactionTableBody" class="divide-y divide-gray-100"></tbody></table></div></div>
+ <div class="flex justify-end"><button type="button" onclick="closeDetailsModal()" class="px-5 py-3 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm hover:bg-gray-50">Close details</button></div></div></div></div>
+
+
+<script>
+const API={base:"https://mail.placomltd.co.rw/success-php/api/stock"};
+const ENDPOINTS={getMaterials:`${API.base}/get-materials.php`,getMaterial:id=>`${API.base}/get-material.php?id=${encodeURIComponent(id)}`,createMaterial:`${API.base}/create-material.php`,updateMaterial:id=>`${API.base}/update-material.php?id=${encodeURIComponent(id)}`};
+let allMaterials=[],visibleMaterials=[],balanceMap=new Map(),transactionMap=new Map(),editingMaterialId=null;
+function extractArray(p,keys=[]){if(Array.isArray(p))return p;if(!p||typeof p!=="object")return[];for(const k of keys)if(Array.isArray(p[k]))return p[k];return Array.isArray(p.data)?p.data:Array.isArray(p.results)?p.results:[]}
+function extractObject(p,keys=[]){if(!p||typeof p!=="object")return null;for(const k of keys)if(p[k]&&typeof p[k]==="object")return p[k];return p.data&&typeof p.data==="object"?p.data:p}
+async function fetchJSON(url,options={}){const response=await fetch(url,{...options,headers:{Accept:"application/json",...(options.body?{"Content-Type":"application/json"}:{}),...(options.headers||{})}});const text=await response.text();let payload=null;try{payload=text?JSON.parse(text):null}catch{throw new Error(`Server returned a non-JSON response (${response.status}). Check the backend route: ${url}`)}if(!response.ok)throw new Error(payload?.message||payload?.error||`Request failed with status ${response.status}`);if(payload&&payload.success===false)throw new Error(payload.message||payload.error||"The server could not complete the request.");return payload}
+function getId(v){if(!v)return"";if(typeof v==="string")return v;if(typeof v==="object")return String(v._id||v.id||v.toString?.()||"");return String(v)}
+function toNumber(v){const n=Number(v);return Number.isFinite(n)?n:0}function getTransactionDate(t){return t&&(t.date||t.transaction_date||t.createdAt||t.created_at)||null}
+function calculateTransactionTotals(ts=[]){let totalIn=0,totalOut=0;ts.forEach(t=>{const type=String(t.type||"").toUpperCase(),q=toNumber(t.quantity);if(type==="IN")totalIn+=q;else if(type==="OUT")totalOut+=q});return{totalIn,totalOut}}
+function getStock(m){const id=getId(m._id||m.id),b=balanceMap.get(id)||m.stockBalance||m.stock_balance||m.balance||m.stock||{};const ts=Array.isArray(m.transactions)?m.transactions:transactionMap.get(id)||[];const totals=calculateTransactionTotals(ts);const initial=toNumber(m.initial_quantity??m.initialQuantity??b.initial_quantity??b.initialQuantity??0);const incoming=toNumber(m.total_in??m.totalIn??m.incoming??m.in_quantity??b.total_in??b.totalIn??b.incoming??totals.totalIn);const outgoing=toNumber(m.total_out??m.totalOut??m.outgoing??m.out_quantity??b.total_out??b.totalOut??b.outgoing??totals.totalOut);const calculatedCurrent=initial+incoming-outgoing;const current=toNumber(m.current_quantity??m.currentQuantity??m.current_stock??m.currentStock??b.current_quantity??b.currentQuantity??b.current??calculatedCurrent);return{initial,incoming,outgoing,adjustmentIncrease:0,adjustmentDecrease:0,current,calculatedCurrent}}
+async function loadMaterialSystem(){setLoadingState(true);clearPageError();try{const response=await fetchJSON(ENDPOINTS.getMaterials);allMaterials=extractArray(response,["materials","material","items","data"]);balanceMap=new Map();transactionMap=new Map();allMaterials.forEach(m=>{const id=getId(m._id||m.id);if(!id)return;const b=m.stockBalance||m.stock_balance||m.balance||m.stock||null;if(b)balanceMap.set(id,b);const ts=m.transactions||m.stockTransactions||m.stock_transactions||[];if(Array.isArray(ts))transactionMap.set(id,ts)});rebuildCategoryFilter();applyFilters();updateSummary()}catch(e){console.error("Material system loading error:",e);allMaterials=[];visibleMaterials=[];balanceMap=new Map();transactionMap=new Map();renderMaterials();updateSummary();showPageError(e.message||"Unable to load materials.")}finally{setLoadingState(false)}}
+function buildBalanceMap(items=[]){balanceMap=new Map();items.forEach(b=>{const id=getId(b.material_id||b.material||b.materialId);if(id)balanceMap.set(id,b)})}function buildTransactionMap(items=[]){transactionMap=new Map();items.forEach(t=>{const id=getId(t.material_id||t.material||t.materialId);if(!id)return;if(!transactionMap.has(id))transactionMap.set(id,[]);transactionMap.get(id).push(t)});for(const ts of transactionMap.values())ts.sort((a,b)=>new Date(getTransactionDate(b)||0)-new Date(getTransactionDate(a)||0))}
+function applyFilters(){const search=document.getElementById("materialSearch").value.trim().toLowerCase(),category=document.getElementById("categoryFilter").value,status=document.getElementById("statusFilter").value;visibleMaterials=allMaterials.filter(m=>{const stock=getStock(m),haystack=[m.material_code,m.name,m.description,m.category,m.unit].map(v=>String(v||"").toLowerCase()).join(" "),matchesSearch=!search||haystack.includes(search),matchesCategory=!category||String(m.category||"").trim()===category,active=m.active!==false,isLow=active&&toNumber(m.minimum_stock)>0&&stock.current<=toNumber(m.minimum_stock),matchesStatus=!status||(status==="active"&&active)||(status==="inactive"&&!active)||(status==="low"&&isLow);return matchesSearch&&matchesCategory&&matchesStatus});renderMaterials();updateFilterCount()}
+function rebuildCategoryFilter(){const select=document.getElementById("categoryFilter"),old=select.value,categories=[...new Set(allMaterials.map(m=>String(m.category||"").trim()).filter(Boolean))].sort((a,b)=>a.localeCompare(b));select.innerHTML='<option value="">All categories</option>';categories.forEach(c=>{const o=document.createElement("option");o.value=c;o.textContent=c;select.appendChild(o)});if(categories.includes(old))select.value=old}
+function renderMaterials(){const body=document.getElementById("materialsTableBody"),container=document.getElementById("materialsTableContainer"),empty=document.getElementById("materialsEmpty");body.innerHTML="";if(!visibleMaterials.length){container.style.display="none";empty.style.display="block";return}container.style.display="block";empty.style.display="none";visibleMaterials.forEach((m,i)=>{const row=document.createElement("tr"),stock=getStock(m),active=m.active!==false,min=toNumber(m.minimum_stock),low=active&&min>0&&stock.current<=min,id=getId(m._id||m.id);if(low)row.classList.add("low-stock");if(!active)row.classList.add("inactive-row");const status=!active?'<span class="inactive-badge">Inactive</span>':low?`<span class="low-stock-badge">Low: ${formatQuantity(min)}</span>`:'<span class="active-badge">Active</span>';row.innerHTML=`<td class="px-4 py-4 text-center material-number">${i+1}</td><td class="px-4 py-4"><span class="material-name">${escapeHTML(m.name||"-")}</span><span class="material-code">${escapeHTML(m.material_code||"No code")}</span></td><td class="px-4 py-4"><div class="material-description">${escapeHTML(m.description||"-")}</div></td><td class="px-4 py-4 stock-number">${formatQuantity(stock.initial)}</td><td class="px-4 py-4 stock-unit">${escapeHTML(m.unit||"-")}</td><td class="px-4 py-4 movement-in">${formatQuantity(stock.incoming)}</td><td class="px-4 py-4 movement-out">${formatQuantity(stock.outgoing)}</td><td class="px-4 py-4 current-quantity">${formatQuantity(stock.current)}</td><td class="px-4 py-4 stock-unit">${escapeHTML(m.unit||"-")}</td><td class="px-4 py-4">${status}</td><td class="px-4 py-4"><div class="table-actions"><button type="button" class="table-action view" data-action="view" data-id="${escapeHTML(id)}">View</button><button type="button" class="table-action edit" data-action="edit" data-id="${escapeHTML(id)}">Edit</button></div></td>`;body.appendChild(row)})}
+function updateSummary(){let initial=0,incoming=0,low=0;allMaterials.forEach(m=>{const s=getStock(m);initial+=s.initial;incoming+=s.incoming;if(m.active!==false&&toNumber(m.minimum_stock)>0&&s.current<=toNumber(m.minimum_stock))low++});document.getElementById("summaryMaterials").textContent=allMaterials.length.toLocaleString();document.getElementById("summaryInitial").textContent=formatQuantity(initial);document.getElementById("summaryIn").textContent=formatQuantity(incoming);document.getElementById("summaryLow").textContent=low.toLocaleString()}
+function updateFilterCount(){const n=visibleMaterials.length;document.getElementById("filterCount").textContent=`${n.toLocaleString()} ${n===1?"material":"materials"}`}function clearFilters(){document.getElementById("materialSearch").value="";document.getElementById("categoryFilter").value="";document.getElementById("statusFilter").value="";applyFilters()}
+function openMaterialModal(){editingMaterialId=null;document.getElementById("materialModalTitle").textContent="Add Material";document.getElementById("materialModalSubtitle").textContent="Create a material record for the stock register.";document.getElementById("materialSaveButton").innerHTML='<i class="fa-solid fa-floppy-disk mr-2"></i>Save Material';document.getElementById("materialForm").reset();document.getElementById("materialCode").disabled=false;document.getElementById("initialQuantity").value="0";document.getElementById("initialQuantity").disabled=false;document.getElementById("minimumStock").value="0";document.getElementById("materialActive").value="true";clearModalError();document.getElementById("materialModal").classList.add("show");document.getElementById("materialName").focus()}
+async function openEditMaterial(id){clearModalError();try{let m;try{m=extractObject(await fetchJSON(ENDPOINTS.getMaterial(id)),["material","item"])}catch{m=allMaterials.find(x=>getId(x._id||x.id)===String(id))}if(!m)throw new Error("Material record was not found.");editingMaterialId=id;document.getElementById("materialModalTitle").textContent="Edit Material";document.getElementById("materialModalSubtitle").textContent="Update the material master information.";document.getElementById("materialSaveButton").innerHTML='<i class="fa-solid fa-floppy-disk mr-2"></i>Save Changes';document.getElementById("materialCode").value=m.material_code||"";document.getElementById("materialCode").disabled=true;document.getElementById("materialName").value=m.name||"";document.getElementById("materialDescription").value=m.description||"";document.getElementById("materialCategory").value=m.category||"";document.getElementById("materialUnit").value=m.unit||"";document.getElementById("initialQuantity").value=m.initial_quantity??m.initialQuantity??m.balance?.initial_quantity??m.balance?.initialQuantity??0;document.getElementById("initialQuantity").disabled=false;document.getElementById("minimumStock").value=m.minimum_stock??0;document.getElementById("materialActive").value=m.active===false?"false":"true";document.getElementById("materialModal").classList.add("show")}catch(e){console.error("Edit material error:",e);alert(e.message||"Unable to load material.")}}
+document.getElementById("materialForm").addEventListener("submit",async e=>{e.preventDefault();clearModalError();const button=document.getElementById("materialSaveButton"),wasEditing=Boolean(editingMaterialId);button.disabled=true;button.textContent=wasEditing?"Saving...":"Creating...";const d={name:document.getElementById("materialName").value.trim(),description:document.getElementById("materialDescription").value.trim(),category:document.getElementById("materialCategory").value.trim(),unit:document.getElementById("materialUnit").value.trim(),minimum_stock:Number(document.getElementById("minimumStock").value)||0,active:document.getElementById("materialActive").value==="true"};if(!wasEditing)d.material_code=document.getElementById("materialCode").value.trim();d.initial_quantity=Number(document.getElementById("initialQuantity").value);if(!Number.isFinite(d.initial_quantity))d.initial_quantity=0;try{if(!wasEditing&&!d.material_code)throw new Error("Material code is required.");if(!d.name)throw new Error("Material name is required.");if(!Number.isFinite(d.initial_quantity)||d.initial_quantity<0)throw new Error("Initial quantity cannot be negative.");if(!d.unit)throw new Error("Unit is required.");if(!Number.isFinite(d.minimum_stock)||d.minimum_stock<0)throw new Error("Minimum stock cannot be negative.");await fetchJSON(wasEditing?ENDPOINTS.updateMaterial(editingMaterialId):ENDPOINTS.createMaterial,{method:"POST",body:JSON.stringify(d)});closeMaterialModal();await loadMaterialSystem()}catch(err){console.error("Save material error:",err);showModalError(err.message||"Unable to save material.")}finally{button.disabled=false;button.innerHTML=wasEditing?'<i class="fa-solid fa-floppy-disk mr-2"></i>Save Changes':'<i class="fa-solid fa-floppy-disk mr-2"></i>Save Material'}});
+async function openMaterialDetails(id){const local=allMaterials.find(m=>getId(m._id||m.id)===String(id));if(!local){alert("Material record was not found.");return}let m=local;try{m=extractObject(await fetchJSON(ENDPOINTS.getMaterial(id)),["material","item","data"])||local}catch(e){console.warn("Unable to retrieve individual material record; using list data.",e)}let ts=m.transactions||m.stockTransactions||m.stock_transactions||[];if(!Array.isArray(ts))ts=[];ts=[...ts].sort((a,b)=>new Date(getTransactionDate(b)||0)-new Date(getTransactionDate(a)||0));const totals=calculateTransactionTotals(ts),initial=toNumber(m.initial_quantity??m.initialQuantity??m.balance?.initial_quantity??0),incoming=toNumber(m.total_in??m.totalIn??totals.totalIn),outgoing=toNumber(m.total_out??m.totalOut??totals.totalOut),current=toNumber(m.current_quantity??m.currentQuantity??(initial+incoming-outgoing));document.getElementById("detailsTitle").textContent=m.name||"Material";document.getElementById("detailsSubtitle").textContent=`${m.material_code||"No code"} • ${m.description||m.category||"Stock details"}`;document.getElementById("detailsInitial").textContent=`${formatQuantity(initial)} ${m.unit||""}`;document.getElementById("detailsIn").textContent=`${formatQuantity(incoming)} ${m.unit||""}`;document.getElementById("detailsOut").textContent=`${formatQuantity(outgoing)} ${m.unit||""}`;document.getElementById("detailsCurrent").textContent=`${formatQuantity(current)} ${m.unit||""}`;renderTransactions(ts);document.getElementById("detailsModal").classList.add("show")}
+function renderTransactions(ts){const body=document.getElementById("transactionTableBody"),empty=document.getElementById("transactionEmpty");body.innerHTML="";if(!ts.length){empty.style.display="block";return}empty.style.display="none";ts.forEach(t=>{const type=String(t.type||"").toUpperCase(),cls=type==="IN"?"in":type==="OUT"?"out":type==="INITIAL"?"initial":"adjustment",adjust=type==="ADJUSTMENT"&&t.adjustment_type?` (${t.adjustment_type})`:"",row=document.createElement("tr");row.innerHTML=`<td class="px-4 py-3 whitespace-nowrap">${formatDate(getTransactionDate(t))}</td><td class="px-4 py-3"><span class="transaction-type ${cls}">${escapeHTML(type||"-")}${escapeHTML(adjust)}</span></td><td class="px-4 py-3 text-right font-semibold">${formatQuantity(t.quantity)}</td><td class="px-4 py-3">${escapeHTML(t.supplier||"-")}</td><td class="px-4 py-3">${escapeHTML(t.project||"-")}</td><td class="px-4 py-3">${escapeHTML(t.issued_to||t.issuedTo||"-")}</td><td class="px-4 py-3">${escapeHTML(t.reason||t.notes||"-")}</td>`;body.appendChild(row)})}
+function closeMaterialModal(){document.getElementById("materialModal").classList.remove("show");document.getElementById("materialForm").reset();document.getElementById("materialCode").disabled=false;editingMaterialId=null;clearModalError()}function closeDetailsModal(){document.getElementById("detailsModal").classList.remove("show")}function clearModalError(){const e=document.getElementById("materialFormError");e.textContent="";e.style.display="none"}function showModalError(m){const e=document.getElementById("materialFormError");e.textContent=m;e.style.display="block"}
+document.querySelectorAll(".modal-overlay").forEach(modal=>modal.addEventListener("click",e=>{if(e.target===modal)modal.classList.remove("show")}));document.addEventListener("keydown",e=>{if(e.key==="Escape"){closeMaterialModal();closeDetailsModal()}});document.getElementById("materialSearch").addEventListener("input",applyFilters);document.getElementById("categoryFilter").addEventListener("change",applyFilters);document.getElementById("statusFilter").addEventListener("change",applyFilters);document.getElementById("materialsTableBody").addEventListener("click",e=>{const b=e.target.closest("button[data-action]");if(!b)return;if(b.dataset.action==="view")openMaterialDetails(b.dataset.id);if(b.dataset.action==="edit")openEditMaterial(b.dataset.id)});
+function escapeHTML(v){return String(v??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}function escapeJS(v){return String(v??"").replace(/\\/g,"\\\\").replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\r/g,"\\r").replace(/\n/g,"\\n")}function formatQuantity(v){const n=toNumber(v);return Number.isInteger(n)?n.toLocaleString("en-US"):n.toLocaleString("en-US",{minimumFractionDigits:0,maximumFractionDigits:3})}function formatDate(v){if(!v)return"-";const d=new Date(v);return Number.isNaN(d.getTime())?"-":d.toLocaleString("en-GB",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"})}
+function setLoadingState(loading){document.getElementById("materialsLoading").style.display=loading?"block":"none";if(loading){document.getElementById("materialsTableContainer").style.display="none";document.getElementById("materialsEmpty").style.display="none"}}function showPageError(m){const e=document.getElementById("materialsError");e.textContent=m;e.style.display="block"}function clearPageError(){const e=document.getElementById("materialsError");e.textContent="";e.style.display="none"}function goToRegister(){window.location.href="register.html"}function logout(){if(confirm("Are you sure you want to logout?"))window.location.href="index.html"}
+document.addEventListener("DOMContentLoaded",loadMaterialSystem);
+</script>
+
+    <!-- JavaScript for Mobile Sidebar & Stock Submenu Toggle -->
+    <script>
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+        const stockToggle = document.getElementById('stockToggle');
+        const stockSubmenu = document.getElementById('stockSubmenu');
+        const stockChevron = document.getElementById('stockChevron');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarBackdrop.classList.toggle('hidden');
+        }
+
+        hamburgerBtn.addEventListener('click', toggleSidebar);
+        closeSidebar.addEventListener('click', toggleSidebar);
+        sidebarBackdrop.addEventListener('click', toggleSidebar);
+
+        // Stock Submenu Toggle
+        stockToggle.addEventListener('click', () => {
+            stockSubmenu.classList.toggle('hidden');
+            stockChevron.classList.toggle('rotate-180');
+        });
+
+        // Active link switching visual effect
+        const navLinks = document.querySelectorAll('aside nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                navLinks.forEach(l => {
+                    if(!l.closest('#stockSubmenu')) {
+                        l.classList.remove('bg-primary', 'text-white', 'shadow-md');
+                        l.classList.add('text-gray-600', 'hover:bg-primaryLight', 'hover:text-primary');
+                    }
+                });
+                if(!this.closest('#stockSubmenu')) {
+                    this.classList.remove('text-gray-600', 'hover:bg-primaryLight', 'hover:text-primary');
+                    this.classList.add('bg-primary', 'text-white', 'shadow-md');
+                }
+                if (window.innerWidth < 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+    </script>
+<script>
+(function () {
+    "use strict";
+
+    const currentPage = window.location.pathname;
+    const loginPage = "index.html";
+
+    // Ntukongere kugenzura login uri kuri index.html
+    if (
+        currentPage.endsWith("/index.html") ||
+        currentPage === "/" ||
+        currentPage.endsWith("/")
+    ) {
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    // Reba niba amakuru ya login ahari
+    if (!token && !user) {
+        sessionStorage.setItem(
+            "redirectAfterLogin",
+            window.location.href
+        );
+
+        window.location.replace(loginPage);
+    }
+})();
+</script>
+</body>
+</html>

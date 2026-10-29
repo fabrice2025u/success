@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   
+
+    <title>Login | Worker System</title>
+        <link rel="icon" type="image/x-icon" href="unnamed.png">
+
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div class="auth-container">
+
+        <div class="auth-card">
+
+            <div class="logo">
+                <div class="logo-icon">W</div>
+                <h1>Worker<span>System</span></h1>
+            </div>
+
+            <div class="form-header">
+                <h2>Welcome Back 👋</h2>
+                <p>Login to access your account</p>
+            </div>
+
+            <form id="loginForm">
+
+                <div class="input-group">
+                    <label for="phone">Phone Number</label>
+
+                    <div class="input-wrapper">
+                        <span class="input-icon">📱</span>
+
+                        <input
+                            type="tel"
+                            id="phone"
+                            name="phone"
+                            placeholder="Enter your phone number"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="password">Password</label>
+
+                    <div class="input-wrapper">
+                        <span class="input-icon">🔒</span>
+
+                        <input
+                            type="password"
+                            id="password"
+                            name="password"
+                            placeholder="Enter your password"
+                            required
+                        >
+
+                        <button
+                            type="button"
+                            class="password-toggle"
+                            onclick="togglePassword()"
+                        >
+                            👁
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-options">
+
+                    <label class="remember">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+
+                    <a href="#" class="forgot">
+                        Forgot Password?
+                    </a>
+
+                </div>
+
+                <button type="submit" class="btn-primary" id="loginButton">
+                    Login
+                </button>
+
+            </form>
+
+        </div>
+
+    </div>
+
+<script>
+
+    // ================================
+    // PASSWORD TOGGLE
+    // ================================
+    function togglePassword() {
+
+        const password =
+            document.getElementById("password");
+
+        const button =
+            document.querySelector(".password-toggle");
+
+        if (password.type === "password") {
+
+            password.type = "text";
+            button.textContent = "🙈";
+
+        } else {
+
+            password.type = "password";
+            button.textContent = "👁";
+
+        }
+
+    }
+
+
+    // ================================
+    // LOGIN
+    // ================================
+    document
+        .getElementById("loginForm")
+        .addEventListener("submit", async function (event) {
+
+            event.preventDefault();
+
+            const phone =
+                document.getElementById("phone").value.trim();
+
+            const password =
+                document.getElementById("password").value;
+
+            if (!phone || !password) {
+
+                alert(
+                    "Please enter your phone number and password."
+                );
+
+                return;
+            }
+
+            const loginButton =
+                document.getElementById("loginButton");
+
+            const originalText =
+                loginButton.textContent;
+
+            loginButton.disabled = true;
+            loginButton.textContent = "Logging in...";
+
+            try {
+
+                // PHP + MySQL login endpoint
+                const response = await fetch(
+                    "https://mail.placomltd.co.rw/success-php/api/user/login.php",
+                    {
+                        method: "POST",
+
+                        headers: {
+                            "Content-Type": "application/json",
+                            "Accept": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            phone_number: phone,
+                            password: password
+                        })
+                    }
+                );
+
+                const data = await response.json();
+
+                console.log(
+                    "LOGIN STATUS:",
+                    response.status
+                );
+
+                console.log(
+                    "LOGIN RESPONSE:",
+                    data
+                );
+
+
+                // ================================
+                // LOGIN SUCCESS
+                // ================================
+                if (response.ok && data.success !== false) {
+
+                    const user = data.user;
+
+                    if (!user) {
+
+                        console.error(
+                            "LOGIN RESPONSE DOES NOT CONTAIN user:",
+                            data
+                        );
+
+                        alert(
+                            "Login succeeded, but user information was not returned by the server."
+                        );
+
+                        return;
+                    }
+
+
+                    // ================================
+                    // SAVE USER INFORMATION
+                    // ================================
+                    localStorage.setItem(
+                        "user",
+                        JSON.stringify(user)
+                    );
+
+                    localStorage.setItem(
+                        "userId",
+                        user.id || user._id || ""
+                    );
+
+                    localStorage.setItem(
+                        "userName",
+                        user.fullname || ""
+                    );
+
+                    localStorage.setItem(
+                        "userPhone",
+                        user.phone_number || ""
+                    );
+
+                    localStorage.setItem(
+                        "userRole",
+                        user.role || ""
+                    );
+
+
+                  
+
+
+                    // ================================
+                    // GO TO WORKERS DASHBOARD
+                    // ================================
+                    window.location.href = "worker.html";
+
+                } else {
+
+                    alert(
+                        data.message ||
+                        "Invalid phone number or password."
+                    );
+                }
+
+
+            } catch (error) {
+
+                console.error(
+                    "LOGIN ERROR:",
+                    error
+                );
+
+                alert(
+                    "Unable to connect to the PHP server. " +
+                    "Make sure Apache is running in XAMPP and try again."
+                );
+
+            } finally {
+
+                loginButton.disabled = false;
+                loginButton.textContent = originalText;
+
+            }
+
+        });
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="unnamed.png">
+    <title>Stock Movement | PLACOM LTD</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626', // Red 600
+                        primaryDark: '#b91c1c', // Red 700
+                        primaryLight: '#fef2f2', // Red 50
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- Top Mobile Header Bar -->
+    <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 lg:hidden z-30 shrink-0">
+        <div class="flex items-center space-x-3">
+            <button id="hamburgerBtn" class="text-gray-700 hover:text-primary focus:outline-none p-2 rounded-lg transition">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <span class="font-bold text-lg text-gray-900 tracking-wide">PLACOM LTD Dashboard</span>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button
+        onclick="window.location.href='register.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primaryDark text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow transition">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Register</span>
+    </button>
+        </div>
+    </header>
+
+    <!-- Main Wrapper (Sidebar + Body Area) -->
+    <div class="flex flex-1 overflow-hidden relative">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 lg:static lg:inset-auto transition-transform duration-300 ease-in-out flex flex-col shadow-lg lg:shadow-none">
+            <!-- Sidebar Header / Logo -->
+            <div class="h-16 flex items-center justify-between px-6 bg-primary text-white shrink-0 shadow-inner">
+                <div class="flex items-center space-x-2">
+                    <div class="bg-white text-primary p-2 rounded-lg font-bold flex items-center justify-center w-8 h-8 shadow">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <span class="font-bold text-lg tracking-wide">AdminPortal</span>
+                </div>
+                <button id="closeSidebar" class="text-white hover:text-gray-200 lg:hidden focus:outline-none">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links Scrollable Area -->
+            <nav class="flex-1 overflow-y-auto px-4 py-4 space-y-1.5">
+           
+                <a href="worker.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-users w-6 text-center mr-3 text-lg"></i>
+                    Worker
+                </a>
+                <a href="attendance.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-user-check w-6 text-center mr-3 text-lg"></i>
+                    Attendance
+                </a>
+                <a href="special-case.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-triangle-exclamation w-6 text-center mr-3 text-lg"></i>
+                    Special-case
+                </a>
+                <a href="salary.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-wallet w-6 text-center mr-3 text-lg"></i>
+                    Salary
+                </a>
+                <a href="salary-record.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-file-invoice-dollar w-6 text-center mr-3 text-lg"></i>
+                    Salary Record
+                </a>
+                <a href="attendance-record.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-clipboard-user w-6 text-center mr-3 text-lg"></i>
+                    Attendance Record
+                </a>
+                   <!-- Stock Submenu Dropdown -->
+                <div class="space-y-1">
+                    <button id="stockToggle" class="w-full flex items-center justify-between px-4 py-3 text-sm font-semibold rounded-xl text-white bg-primary shadow-md transition group focus:outline-none">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-boxes-stacked w-6 text-center mr-3 text-lg"></i>
+                            <span>Stock</span>
+                        </div>
+                        <i id="stockChevron" class="fa-solid fa-chevron-down text-xs transition-transform duration-200 rotate-180"></i>
+                    </button>
+                    <!-- Submenu Items -->
+                    <div id="stockSubmenu" class="pl-11 pr-2 space-y-1">
+                        <a href="material.html" class="block px-3 py-2 text-xs font-semibold text-primary bg-red-50 rounded-lg transition">
+                            <i class="fa-solid fa-box mr-2"></i> material
+                        </a>
+                        <a href="movement.html" class="block px-3 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-primaryLight rounded-lg transition">
+                            <i class="fa-solid fa-right-left mr-2"></i> movement
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Sidebar Footer Actions (Register & Logout) -->
+            <div class="p-4 border-t border-gray-200 space-y-2 bg-gray-50 shrink-0">
+    <button
+        onclick="window.location.href='register.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primaryDark text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow transition">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Register</span>
+    </button>
+
+    <button
+        onclick="window.location.href='index.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 py-2.5 px-4 rounded-xl text-sm font-semibold transition">
+        <i class="fa-solid fa-right-from-bracket text-red-600"></i>
+        <span>Logout</span>
+    </button>
+</div>
+        </aside>
+
+        <!-- Backdrop for mobile sidebar -->
+        <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden transition-opacity"></div>
+
+        <!-- Main Content Area & Footer Container -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Body Area (Scrollable Main Content) -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-gray-50">
+                <div class="max-w-7xl mx-auto space-y-6">
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">Stock Movement</h1>
+                            <p class="text-sm text-gray-500 mt-1">Record stock IN and OUT movements and review transaction history.</p>
+                        </div>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <button type="button" onclick="loadMaterials(); loadMovementHistory();" class="px-4 py-2 rounded-xl border border-gray-300 bg-white hover:bg-gray-100 text-sm font-semibold">
+                                <i class="fa-solid fa-rotate mr-2"></i>Refresh
+                            </button>
+                            <button type="button" onclick="openMovementForm()" class="px-4 py-2 rounded-xl bg-primary hover:bg-primaryDark text-white text-sm font-semibold shadow">
+                                <i class="fa-solid fa-plus mr-2"></i>Record Movement
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+                            <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Materials</p>
+                            <p id="summaryMaterials" class="text-2xl font-bold mt-2">0</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+                            <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Total Stock In</p>
+                            <p id="summaryIn" class="text-2xl font-bold mt-2 text-emerald-600">0</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+                            <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Total Stock Out</p>
+                            <p id="summaryOut" class="text-2xl font-bold mt-2 text-red-600">0</p>
+                        </div>
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-200">
+                            <p class="text-xs font-semibold uppercase tracking-wider text-gray-400">Current Stock</p>
+                            <p id="summaryCurrent" class="text-2xl font-bold mt-2 text-blue-600">0</p>
+                        </div>
+                    </div>
+
+                    <section class="bg-white rounded-2xl p-5 sm:p-6 shadow-sm border border-gray-200">
+                        <div class="flex flex-col md:flex-row md:items-center justify-between gap-3 mb-5">
+                            <div>
+                                <h2 class="text-lg font-bold text-gray-900">Movement History</h2>
+                                <p class="text-sm text-gray-500 mt-1">Search transactions or filter by movement type.</p>
+                            </div>
+                            <div class="flex flex-col sm:flex-row gap-3">
+                                <input id="historySearch" type="search" placeholder="Search material, supplier, project..." class="w-full sm:w-72 px-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-200">
+                                <select id="historyType" class="px-4 py-2.5 border border-gray-300 rounded-xl text-sm bg-white">
+                                    <option value="">All Types</option>
+                                    <option value="IN">Stock In</option>
+                                    <option value="OUT">Stock Out</option>
+                                    <option value="INITIAL">Initial</option>
+                                    <option value="ADJUSTMENT">Adjustment</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div id="historyLoading" class="py-4 text-sm text-gray-500">Loading movement history...</div>
+                        <div id="historyError" class="hidden mb-4 p-3 rounded-xl bg-red-50 text-red-700 text-sm"></div>
+                        <div class="overflow-x-auto">
+                            <table class="min-w-full text-sm text-left">
+                                <thead class="bg-gray-50 text-gray-500 uppercase text-xs tracking-wider">
+                                    <tr>
+                                        <th class="px-4 py-3">Date</th>
+                                        <th class="px-4 py-3">Material</th>
+                                        <th class="px-4 py-3">Type</th>
+                                        <th class="px-4 py-3">Quantity</th>
+                                        <th class="px-4 py-3">Supplier / Issued To</th>
+                                        <th class="px-4 py-3">Reference</th>
+                                        <th class="px-4 py-3">Project</th>
+                                        <th class="px-4 py-3">Reason / Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyBody" class="divide-y divide-gray-100"></tbody>
+                            </table>
+                        </div>
+                        <div id="historyEmpty" class="hidden py-8 text-center text-sm text-gray-500">No movement records found.</div>
+                    </section>
+                </div>
+            </main>
+
+            <!-- Record Movement Modal -->
+            <div id="movementModal" class="fixed inset-0 z-50 hidden items-center justify-center bg-black/50 p-4">
+                <div class="w-full max-w-3xl max-h-[90vh] overflow-y-auto bg-white rounded-2xl shadow-xl">
+                    <div class="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+                        <div>
+                            <h2 class="text-xl font-bold text-gray-900">Record Stock Movement</h2>
+                            <p class="text-sm text-gray-500 mt-1">Enter the movement details below.</p>
+                        </div>
+                        <button type="button" onclick="closeMovementForm()" class="p-2 rounded-lg hover:bg-gray-100 text-gray-500" aria-label="Close">
+                            <i class="fa-solid fa-xmark text-xl"></i>
+                        </button>
+                    </div>
+                    <form id="movementForm" class="p-6 space-y-5">
+                        <div id="formError" class="hidden p-3 rounded-xl bg-red-50 text-red-700 text-sm"></div>
+                        <div id="formSuccess" class="hidden p-3 rounded-xl bg-emerald-50 text-emerald-700 text-sm"></div>
+
+                        <div>
+                            <label for="materialSelect" class="block text-sm font-semibold text-gray-700 mb-2">Material <span class="text-red-600">*</span></label>
+                            <select id="materialSelect" required class="w-full px-4 py-3 border border-gray-300 rounded-xl bg-white text-sm">
+                                <option value="">Select material...</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-2">Movement Type</label>
+                                <div class="flex gap-5 p-3 border border-gray-200 rounded-xl">
+                                    <label class="flex items-center gap-2 text-sm"><input id="movementIn" type="radio" name="movement_type" value="IN" checked> Stock In</label>
+                                    <label class="flex items-center gap-2 text-sm"><input id="movementOut" type="radio" name="movement_type" value="OUT"> Stock Out</label>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="quantity" class="block text-sm font-semibold text-gray-700 mb-2">Quantity <span class="text-red-600">*</span></label>
+                                <div class="flex">
+                                    <input id="quantity" type="number" min="0.0001" step="any" required class="w-full px-4 py-3 border border-gray-300 rounded-l-xl text-sm" placeholder="Enter quantity">
+                                    <input id="unit" type="text" readonly class="w-24 px-3 py-3 border border-l-0 border-gray-300 rounded-r-xl bg-gray-50 text-sm" placeholder="Unit">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div id="supplierGroup">
+                                <label for="supplier" class="block text-sm font-semibold text-gray-700 mb-2">Supplier</label>
+                                <input id="supplier" type="text" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm" placeholder="Supplier name">
+                            </div>
+                            <div id="issuedToGroup" style="display:none">
+                                <label for="issuedTo" class="block text-sm font-semibold text-gray-700 mb-2">Issued To</label>
+                                <input id="issuedTo" type="text" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm" placeholder="Worker / recipient">
+                            </div>
+                            <div id="projectGroup" style="display:none">
+                                <label for="project" class="block text-sm font-semibold text-gray-700 mb-2">Project</label>
+                                <input id="project" type="text" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm" placeholder="Project name">
+                            </div>
+                            <div id="reasonGroup" style="display:none">
+                                <label for="reason" class="block text-sm font-semibold text-gray-700 mb-2">Reason / Notes</label>
+                                <input id="reason" type="text" class="w-full px-4 py-3 border border-gray-300 rounded-xl text-sm" placeholder="Reason for issuing stock">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 rounded-xl bg-gray-50 border border-gray-200 p-4">
+                            <div><p class="text-xs text-gray-500 mb-1">Current Stock</p><p id="previewCurrent" class="font-bold text-gray-900">0</p></div>
+                            <div><p class="text-xs text-gray-500 mb-1">Movement</p><p id="previewMovement" class="font-bold text-gray-900">0</p></div>
+                            <div><p class="text-xs text-gray-500 mb-1">Expected Stock</p><p id="previewExpected" class="font-bold text-gray-900">0</p></div>
+                        </div>
+
+                        <div class="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-2">
+                            <button type="button" onclick="resetMovementForm()" class="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50">Reset</button>
+                            <button type="button" onclick="closeMovementForm()" class="px-5 py-2.5 rounded-xl border border-gray-300 text-gray-700 font-semibold text-sm hover:bg-gray-50">Cancel</button>
+                            <button id="saveMovementButton" type="submit" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primaryDark text-white font-semibold text-sm">Save Movement</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Footer Section (Quick Links & Developed by M TECH Ltd on the right) -->
+            <footer class="bg-white border-t border-gray-200 py-4 px-6 shrink-0 z-20">
+                <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-gray-500">
+                    
+                    <div class="font-medium text-gray-600">
+                        Developed by <span class="font-bold text-primary">M TECH Ltd</span>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+
+    </div>
+
+    <style>
+        .badge { display:inline-flex; align-items:center; padding:.3rem .65rem; border-radius:9999px; font-size:.72rem; font-weight:700; }
+        .badge.in { background:#dcfce7; color:#166534; }
+        .badge.out { background:#fee2e2; color:#991b1b; }
+        .badge.initial { background:#dbeafe; color:#1d4ed8; }
+        .badge.adjustment { background:#fef3c7; color:#92400e; }
+        .out-warning { color:#b91c1c !important; }
+        #movementModal { display:none; }
+        #movementModal.open { display:flex; }
+        #historyLoading, #historyError, #historyEmpty, #formError, #formSuccess { display:none; }
+        #historyBody td { padding: .9rem 1rem; white-space: nowrap; color:#374151; }
+        #historyBody tr:hover { background:#f9fafb; }
+    </style>
+    <script>
+
+/* =========================================================
+   API CONFIGURATION
+========================================================= */
+
+const API = {
+
+    base:
+        "https://mail.placomltd.co.rw/success-php/api/stock",
+
+    materials:
+        "https://mail.placomltd.co.rw/success-php/api/stock/get-materials.php",
+
+    movements:
+        "https://mail.placomltd.co.rw/success-php/api/stock/transactions.php",
+
+    currentStock:
+        "https://mail.placomltd.co.rw/success-php/api/stock/current-stock.php",
+
+    stockIn:
+        id =>
+            `https://mail.placomltd.co.rw/success-php/api/stock/stock-in.php?id=${encodeURIComponent(id)}`,
+
+    stockOut:
+        id =>
+            `https://mail.placomltd.co.rw/success-php/api/stock/stock-out.php?id=${encodeURIComponent(id)}`
+};
+
+
+/* =========================================================
+   GLOBAL VARIABLES
+========================================================= */
+
+let materials = [];
+
+let movements = [];
+
+let selectedMaterial = null;
+
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function getId(value){
+
+    if(!value){
+        return "";
+    }
+
+    if(typeof value === "string"){
+        return value;
+    }
+
+    if(typeof value === "object"){
+        return String(
+            value._id ||
+            value.id ||
+            ""
+        );
+    }
+
+    return String(value);
+}
+
+
+function toNumber(value){
+
+    const n = Number(value);
+
+    return Number.isFinite(n)
+        ? n
+        : 0;
+}
+
+
+function formatQuantity(value){
+
+    const n = toNumber(value);
+
+    return Number.isInteger(n)
+        ? n.toLocaleString()
+        : n.toLocaleString(
+            undefined,
+            {
+                maximumFractionDigits:4
+            }
+        );
+}
+
+
+function escapeHTML(value){
+
+    return String(value ?? "")
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;")
+        .replace(/"/g,"&quot;")
+        .replace(/'/g,"&#039;");
+}
+
+
+/* =========================================================
+   FETCH JSON
+========================================================= */
+
+async function fetchJSON(url,options={}){
+
+    let response;
+
+    try {
+        response = await fetch(
+            url,
+            {
+                ...options,
+                cache: "no-store",
+                headers:{
+                    "Accept":"application/json",
+                    ...(options.body
+                        ? {"Content-Type":"application/json"}
+                        : {}),
+                    ...(options.headers || {})
+                }
+            }
+        );
+    } catch (error) {
+        throw new Error(
+            `Cannot connect to API: ${url}. Check that Apache is running and the URL is correct.`
+        );
+    }
+
+    const text = await response.text();
+    let data = null;
+
+    try {
+        data = text ? JSON.parse(text) : null;
+    } catch {
+        throw new Error(
+            `API returned non-JSON data (HTTP ${response.status}) from ${url}. Check PHP errors and the URL.`
+        );
+    }
+
+    if (!response.ok) {
+        throw new Error(
+            data?.message || data?.error || `API request failed (HTTP ${response.status})`
+        );
+    }
+
+    // Some PHP endpoints return HTTP 200 even when the operation failed.
+    if (data && typeof data === "object" && data.success === false) {
+        throw new Error(
+            data.message || data.error || "The API reported that the request failed."
+        );
+    }
+
+    return data;
+}
+
+
+/* =========================================================
+   EXTRACT ARRAY
+========================================================= */
+
+function extractArray(data,keys=[]){
+    if (Array.isArray(data)) return data;
+    if (!data || typeof data !== "object") return [];
+
+    // First check the exact response keys used by the PHP endpoints.
+    for (const key of keys) {
+        if (Array.isArray(data[key])) return data[key];
+    }
+
+    if (Array.isArray(data.results)) return data.results;
+    if (Array.isArray(data.items)) return data.items;
+
+    // Also support wrapped responses such as { data: { materials: [...] } }.
+    if (data.data && typeof data.data === "object") {
+        const nested = extractArray(data.data, keys);
+        if (nested.length || Array.isArray(data.data)) return nested;
+    }
+
+    // Support other common API wrappers without looping indefinitely.
+    for (const key of ["result", "payload", "response"]) {
+        if (data[key] && typeof data[key] === "object") {
+            const nested = extractArray(data[key], keys);
+            if (nested.length || Array.isArray(data[key])) return nested;
+        }
+    }
+
+    return [];
+}
+
+
+/* =========================================================
+   STOCK CALCULATION
+========================================================= */
+
+function stockOf(material){
+
+    const balance =
+        material.stockBalance ||
+        material.stock_balance ||
+        material.balance ||
+        material.stock ||
+        {};
+
+
+    const initial =
+        toNumber(
+            material.initial_quantity ??
+            material.initialQuantity ??
+            balance.initial_quantity ??
+            balance.initialQuantity ??
+            0
+        );
+
+
+    const incoming =
+        toNumber(
+            material.total_in ??
+            material.totalIn ??
+            material.incoming ??
+            balance.total_in ??
+            balance.totalIn ??
+            balance.incoming ??
+            0
+        );
+
+
+    const outgoing =
+        toNumber(
+            material.total_out ??
+            material.totalOut ??
+            material.outgoing ??
+            balance.total_out ??
+            balance.totalOut ??
+            balance.outgoing ??
+            0
+        );
+
+
+    const current =
+        toNumber(
+            material.current_quantity ??
+            material.currentQuantity ??
+            material.current_stock ??
+            material.currentStock ??
+            balance.current_quantity ??
+            balance.currentQuantity ??
+            balance.current ??
+            initial + incoming - outgoing
+        );
+
+
+    return {
+        initial,
+        incoming,
+        outgoing,
+        current
+    };
+
+}
+
+
+/* =========================================================
+   LOAD MATERIALS
+========================================================= */
+
+async function loadMaterials(){
+
+    try{
+
+        const data =
+            await fetchJSON(
+                API.materials
+            );
+
+
+        materials = extractArray(data, ["materials", "items", "data"]);
+
+        if (!Array.isArray(materials)) {
+            throw new Error("Materials API response does not contain a materials array.");
+        }
+
+        console.info(`Materials loaded: ${materials.length}`);
+        populateMaterialSelect();
+
+        updateSummary();
+
+        updatePreview();
+
+
+    }catch(error){
+
+        console.error(
+            "Material loading error:",
+            error
+        );
+
+
+        const select =
+            document.getElementById(
+                "materialSelect"
+            );
+
+
+        select.innerHTML =
+            `<option value="">
+                Unable to load materials
+            </option>`;
+
+
+        showFormError(
+            error.message
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   POPULATE MATERIAL SELECT
+========================================================= */
+
+function populateMaterialSelect(){
+
+    const select =
+        document.getElementById(
+            "materialSelect"
+        );
+
+
+    const oldValue =
+        select.value;
+
+
+    select.innerHTML =
+        `<option value="">
+            Select material...
+        </option>`;
+
+
+    materials.forEach(
+        material => {
+
+            const id =
+                getId(
+                    material._id ||
+                    material.id
+                );
+
+
+            if(!id){
+                return;
+            }
+
+
+            const option =
+                document.createElement(
+                    "option"
+                );
+
+
+            option.value =
+                id;
+
+
+            option.textContent =
+                `${material.name || "Unnamed"}${
+                    material.material_code
+                        ? " — " + material.material_code
+                        : ""
+                }`;
+
+
+            select.appendChild(
+                option
+            );
+
+        }
+    );
+
+
+    if(
+        materials.some(
+            m =>
+                getId(
+                    m._id ||
+                    m.id
+                ) === oldValue
+        )
+    ){
+
+        select.value =
+            oldValue;
+
+    }
+
+}
+
+
+/* =========================================================
+   FIND MATERIAL
+========================================================= */
+
+function findMaterial(id){
+
+    return materials.find(
+        material =>
+            getId(
+                material._id ||
+                material.id
+            ) === String(id)
+    );
+
+}
+
+
+/* =========================================================
+   MATERIAL CHANGED
+========================================================= */
+
+function onMaterialChanged(){
+
+    selectedMaterial =
+        findMaterial(
+            document.getElementById(
+                "materialSelect"
+            ).value
+        ) || null;
+
+
+    document.getElementById(
+        "unit"
+    ).value =
+        selectedMaterial?.unit || "";
+
+
+    updatePreview();
+
+}
+
+
+/* =========================================================
+   MOVEMENT TYPE
+========================================================= */
+
+function getMovementType(){
+
+    return document.querySelector(
+        'input[name="movement_type"]:checked'
+    )?.value || "IN";
+
+}
+
+
+/* =========================================================
+   UPDATE MOVEMENT FIELDS
+========================================================= */
+
+function updateMovementFields(){
+
+    const type =
+        getMovementType();
+
+
+    const isOut =
+        type === "OUT";
+
+
+    document.getElementById(
+        "supplierGroup"
+    ).style.display =
+        isOut
+            ? "none"
+            : "";
+
+
+    document.getElementById(
+        "issuedToGroup"
+    ).style.display =
+        isOut
+            ? ""
+            : "none";
+
+
+    document.getElementById(
+        "projectGroup"
+    ).style.display =
+        isOut
+            ? ""
+            : "none";
+
+
+    document.getElementById(
+        "reasonGroup"
+    ).style.display =
+        isOut
+            ? ""
+            : "none";
+
+
+    updatePreview();
+
+}
+
+
+/* =========================================================
+   UPDATE PREVIEW
+========================================================= */
+
+function updatePreview(){
+
+    const material =
+        selectedMaterial;
+
+
+    const quantity =
+        toNumber(
+            document.getElementById(
+                "quantity"
+            ).value
+        );
+
+
+    const type =
+        getMovementType();
+
+
+    const expectedElement =
+        document.getElementById(
+            "previewExpected"
+        );
+
+
+    const expectedContainer =
+        expectedElement.parentElement;
+
+
+    expectedContainer.classList.remove(
+        "out-warning"
+    );
+
+
+    if(!material){
+
+        document.getElementById(
+            "previewCurrent"
+        ).textContent =
+            "0";
+
+
+        document.getElementById(
+            "previewMovement"
+        ).textContent =
+            "0";
+
+
+        expectedElement.textContent =
+            "0";
+
+
+        return;
+
+    }
+
+
+    const stock =
+        stockOf(material);
+
+
+    const expected =
+        type === "OUT"
+            ? stock.current - quantity
+            : stock.current + quantity;
+
+
+    document.getElementById(
+        "previewCurrent"
+    ).textContent =
+        `${formatQuantity(stock.current)} ${material.unit || ""}`;
+
+
+    document.getElementById(
+        "previewMovement"
+    ).textContent =
+        `${type === "OUT" ? "-" : "+"}${formatQuantity(quantity)} ${material.unit || ""}`;
+
+
+    expectedElement.textContent =
+        `${formatQuantity(expected)} ${material.unit || ""}`;
+
+
+    if(
+        type === "OUT" &&
+        expected < 0
+    ){
+
+        expectedContainer.classList.add(
+            "out-warning"
+        );
+
+    }
+
+}
+
+
+/* =========================================================
+   UPDATE SUMMARY
+========================================================= */
+
+function updateSummary(){
+
+    let totalIn = 0;
+
+    let totalOut = 0;
+
+    let totalCurrent = 0;
+
+
+    materials.forEach(
+        material => {
+
+            const s =
+                stockOf(material);
+
+
+            totalIn +=
+                s.incoming;
+
+
+            totalOut +=
+                s.outgoing;
+
+
+            totalCurrent +=
+                s.current;
+
+        }
+    );
+
+
+    document.getElementById(
+        "summaryMaterials"
+    ).textContent =
+        materials.length;
+
+
+    document.getElementById(
+        "summaryIn"
+    ).textContent =
+        formatQuantity(
+            totalIn
+        );
+
+
+    document.getElementById(
+        "summaryOut"
+    ).textContent =
+        formatQuantity(
+            totalOut
+        );
+
+
+    document.getElementById(
+        "summaryCurrent"
+    ).textContent =
+        formatQuantity(
+            totalCurrent
+        );
+
+}
+
+
+/* =========================================================
+   FORM MESSAGES
+========================================================= */
+
+function showFormError(message){
+
+    const el =
+        document.getElementById(
+            "formError"
+        );
+
+
+    el.textContent =
+        message ||
+        "Unable to complete the operation.";
+
+
+    el.style.display =
+        "block";
+
+}
+
+
+function clearMessages(){
+
+    document.getElementById(
+        "formError"
+    ).style.display =
+        "none";
+
+
+    document.getElementById(
+        "formSuccess"
+    ).style.display =
+        "none";
+
+}
+
+
+function showSuccess(message){
+
+    const el =
+        document.getElementById(
+            "formSuccess"
+        );
+
+
+    el.textContent =
+        message;
+
+
+    el.style.display =
+        "block";
+
+}
+
+
+/* =========================================================
+   OPEN FORM
+========================================================= */
+
+async function openMovementForm(){
+
+    clearMessages();
+
+    document.getElementById(
+        "movementModal"
+    ).classList.add(
+        "open"
+    );
+
+
+    if(!materials.length){
+
+        await loadMaterials();
+
+    }
+
+
+    updateMovementFields();
+
+    updatePreview();
+
+}
+
+
+/* =========================================================
+   CLOSE FORM
+========================================================= */
+
+function closeMovementForm(){
+
+    document.getElementById(
+        "movementModal"
+    ).classList.remove(
+        "open"
+    );
+
+}
+
+
+/* =========================================================
+   SAVE MOVEMENT
+========================================================= */
+
+async function saveMovement(event){
+
+    event.preventDefault();
+
+    clearMessages();
+
+
+    const materialId =
+        document.getElementById(
+            "materialSelect"
+        ).value;
+
+
+    const material =
+        findMaterial(
+            materialId
+        );
+
+
+    const type =
+        getMovementType();
+
+
+    const quantity =
+        toNumber(
+            document.getElementById(
+                "quantity"
+            ).value
+        );
+
+
+    if(!material){
+
+        showFormError(
+            "Please select a material."
+        );
+
+        return;
+
+    }
+
+
+    if(quantity <= 0){
+
+        showFormError(
+            "Quantity must be greater than zero."
+        );
+
+        return;
+
+    }
+
+
+    const stock =
+        stockOf(material);
+
+
+    if(
+        type === "OUT" &&
+        quantity > stock.current
+    ){
+
+        showFormError(
+            `Insufficient stock. Current ${
+                formatQuantity(stock.current)
+            } ${
+                material.unit || ""
+            }; you are trying to issue ${
+                formatQuantity(quantity)
+            } ${
+                material.unit || ""
+            }.`
+        );
+
+        return;
+
+    }
+
+
+    const payload = {
+
+        id:
+            Number(materialId),
+
+        quantity:
+            quantity,
+
+        supplier:
+            document.getElementById(
+                "supplier"
+            ).value.trim(),
+
+        issued_to:
+            document.getElementById(
+                "issuedTo"
+            ).value.trim(),
+
+        project:
+            document.getElementById(
+                "project"
+            ).value.trim(),
+
+        reason:
+            document.getElementById(
+                "reason"
+            ).value.trim()
+
+    };
+
+
+    const button =
+        document.getElementById(
+            "saveMovementButton"
+        );
+
+
+    button.disabled =
+        true;
+
+
+    button.textContent =
+        "Saving...";
+
+
+    try{
+
+        const movementUrl =
+            type === "IN"
+                ? API.stockIn(materialId)
+                : API.stockOut(materialId);
+
+
+        await fetchJSON(
+            movementUrl,
+            {
+                method:"POST",
+
+                body:
+                    JSON.stringify(
+                        payload
+                    )
+            }
+        );
+
+
+        showSuccess(
+            `${type} movement saved successfully.`
+        );
+
+
+        document.getElementById(
+            "quantity"
+        ).value = "";
+
+
+       
+
+        document.getElementById(
+            "supplier"
+        ).value = "";
+
+
+        document.getElementById(
+            "issuedTo"
+        ).value = "";
+
+
+        document.getElementById(
+            "project"
+        ).value = "";
+
+
+        document.getElementById(
+            "reason"
+        ).value = "";
+
+
+        /*
+         * Reload materials because
+         * current stock may have changed.
+         */
+
+        await loadMaterials();
+
+
+        /*
+         * Reload movement history.
+         */
+
+        await loadMovementHistory();
+
+
+        updatePreview();
+
+
+        /*
+         * Close the form after
+         * successful save.
+         */
+
+        setTimeout(
+            () => {
+
+                closeMovementForm();
+
+            },
+            700
+        );
+
+
+    }catch(error){
+
+        console.error(
+            "Save movement error:",
+            error
+        );
+
+
+        showFormError(
+            error.message
+        );
+
+
+    }finally{
+
+        button.disabled =
+            false;
+
+
+        button.textContent =
+            "Save Movement";
+
+    }
+
+}
+
+
+/* =========================================================
+   LOAD MOVEMENT HISTORY
+========================================================= */
+
+async function loadMovementHistory(){
+
+    const loading =
+        document.getElementById(
+            "historyLoading"
+        );
+
+
+    const errorBox =
+        document.getElementById(
+            "historyError"
+        );
+
+
+    loading.style.display =
+        "block";
+
+
+    errorBox.style.display =
+        "none";
+
+
+    try{
+
+        const data =
+            await fetchJSON(
+                API.movements
+            );
+
+
+        /*
+         * IMPORTANT:
+         * This was missing in your previous code.
+         */
+
+        movements = extractArray(data, ["movements", "transactions", "items", "data"]);
+
+        if (!Array.isArray(movements)) {
+            throw new Error("Transactions API response does not contain a movements array.");
+        }
+
+        console.info(`Stock movements loaded: ${movements.length}`);
+        renderHistory();
+
+
+    }catch(error){
+
+        console.error(
+            "Movement history error:",
+            error
+        );
+
+
+        movements = [];
+
+
+        renderHistory();
+
+
+        errorBox.textContent =
+            "Movement history is not connected: " +
+            error.message;
+
+
+        errorBox.style.display =
+            "block";
+
+
+    }finally{
+
+        loading.style.display =
+            "none";
+
+    }
+
+}
+
+
+/* =========================================================
+   GET MATERIAL NAME
+========================================================= */
+
+function getHistoryMaterialName(m){
+
+    /*
+     * New controller response:
+     *
+     * material: {
+     *     name,
+     *     code,
+     *     unit
+     * }
+     */
+
+    if(
+        m.material &&
+        typeof m.material === "object"
+    ){
+
+        return (
+            m.material.name ||
+            m.material.code ||
+            "-"
+        );
+
+    }
+
+
+    if(m.material_name){
+
+        return m.material_name;
+
+    }
+
+
+    const materialId =
+        getId(
+            m.material_id ||
+            m.material ||
+            m.materialId
+        );
+
+
+    const material =
+        findMaterial(
+            materialId
+        );
+
+
+    return material?.name || "-";
+
+}
+
+
+/* =========================================================
+   RENDER HISTORY
+========================================================= */
+
+function renderHistory(){
+
+    const body =
+        document.getElementById(
+            "historyBody"
+        );
+
+
+    const empty =
+        document.getElementById(
+            "historyEmpty"
+        );
+
+
+    body.innerHTML =
+        "";
+
+
+    const search =
+        document.getElementById(
+            "historySearch"
+        ).value
+        .trim()
+        .toLowerCase();
+
+
+    const type =
+        document.getElementById(
+            "historyType"
+        ).value;
+
+
+    const filtered =
+        movements.filter(
+            movement => {
+
+                const material =
+                    getHistoryMaterialName(
+                        movement
+                    );
+
+
+                const haystack = [
+
+                    material,
+
+                    movement.type,
+
+                 
+
+                    movement.supplier,
+
+                    movement.issued_to,
+
+                    movement.supplier_issued_to,
+
+                    movement.project,
+
+                    movement.reason,
+
+                    movement.notes
+
+                ]
+                .map(
+                    value =>
+                        String(
+                            value || ""
+                        ).toLowerCase()
+                )
+                .join(" ");
+
+
+                return (
+
+                    (!search ||
+                        haystack.includes(
+                            search
+                        )
+                    )
+
+                    &&
+
+                    (!type ||
+                        String(
+                            movement.type || ""
+                        ).toUpperCase() === type
+                    )
+
+                );
+
+            }
+        );
+
+
+    if(!filtered.length){
+
+        empty.style.display =
+            "block";
+
+        return;
+
+    }
+
+
+    empty.style.display =
+        "none";
+
+
+    filtered.forEach(
+        movement => {
+
+            const materialName =
+                getHistoryMaterialName(
+                    movement
+                );
+
+
+            /*
+             * Supports both:
+             *
+             * transaction_date
+             *
+             * and controller response:
+             *
+             * date
+             */
+
+            const date =
+                movement.date ||
+                movement.transaction_date ||
+                movement.createdAt ||
+                movement.created_at;
+
+
+            /*
+             * Supports:
+             *
+             * supplier_issued_to
+             *
+             * supplier
+             *
+             * issued_to
+             */
+
+            const who =
+                movement.supplier_issued_to ||
+                (
+                    String(
+                        movement.type || ""
+                    ).toUpperCase() === "IN"
+                        ? movement.supplier
+                        : movement.issued_to
+                ) ||
+                "-";
+
+
+            /*
+             * Unit can come from:
+             *
+             * movement.unit
+             *
+             * material.unit
+             */
+
+            const unit =
+                movement.unit ||
+                movement.material?.unit ||
+                "";
+
+
+            const typeClass =
+                String(
+                    movement.type || ""
+                ).toLowerCase();
+
+
+            const tr =
+                document.createElement(
+                    "tr"
+                );
+
+
+            tr.innerHTML = `
+
+                <td>
+                    ${escapeHTML(
+                        date
+                            ? new Date(date).toLocaleString()
+                            : "-"
+                    )}
+                </td>
+
+
+                <td>
+                    <strong>
+                        ${escapeHTML(
+                            materialName
+                        )}
+                    </strong>
+
+                    ${
+                        movement.material?.code
+                            ? `<div style="font-size:10px;color:#8a94a6;margin-top:3px;">
+                                ${escapeHTML(
+                                    movement.material.code
+                                )}
+                               </div>`
+                            : ""
+                    }
+
+                </td>
+
+
+                <td>
+
+                    <span
+                        class="badge ${typeClass}">
+
+                        ${escapeHTML(
+                            movement.type || "-"
+                        )}
+
+                    </span>
+
+                </td>
+
+
+                <td>
+
+                    <strong>
+                        ${formatQuantity(
+                            movement.quantity
+                        )}
+                    </strong>
+
+                    ${
+                        unit
+                            ? escapeHTML(
+                                " " + unit
+                              )
+                            : ""
+                    }
+
+                </td>
+
+
+                <td>
+                    ${escapeHTML(
+                        who
+                    )}
+                </td>
+
+
+                <td>
+                    ${escapeHTML(
+                        movement.reference || "-"
+                    )}
+                </td>
+
+
+                <td>
+                    ${escapeHTML(
+                        movement.project || "-"
+                    )}
+                </td>
+
+
+                <td>
+                    ${escapeHTML(
+                        movement.reason ||
+                        movement.notes ||
+                        "-"
+                    )}
+                </td>
+
+            `;
+
+
+            body.appendChild(
+                tr
+            );
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   RESET FORM
+========================================================= */
+
+function resetMovementForm(){
+
+    document.getElementById(
+        "movementForm"
+    ).reset();
+
+
+    document.getElementById(
+        "movementIn"
+    ).checked =
+        true;
+
+
+    selectedMaterial =
+        null;
+
+
+    document.getElementById(
+        "unit"
+    ).value =
+        "";
+
+
+    clearMessages();
+
+
+    updateMovementFields();
+
+
+    updatePreview();
+
+}
+
+
+/* =========================================================
+   MOBILE MENU
+========================================================= */
+
+function setupMobileMenu(){
+
+    const nav =
+        document.getElementById(
+            "mobileNavigation"
+        );
+
+
+    const toggle =
+        document.getElementById(
+            "mobileMenuToggle"
+        );
+
+
+    toggle.addEventListener(
+        "click",
+        () => {
+
+            const open =
+                nav.classList.toggle(
+                    "mobile-menu-open"
+                );
+
+
+            toggle.setAttribute(
+                "aria-expanded",
+                String(open)
+            );
+
+
+            document.body.classList.toggle(
+                "mobile-menu-active",
+                open
+            );
+
+        }
+    );
+
+
+    document.addEventListener(
+        "click",
+        event => {
+
+            if(
+                window.innerWidth > 600
+            ){
+
+                return;
+
+            }
+
+
+            if(
+                !nav.contains(
+                    event.target
+                )
+            ){
+
+                nav.classList.remove(
+                    "mobile-menu-open"
+                );
+
+
+                toggle.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
+
+
+                document.body.classList.remove(
+                    "mobile-menu-active"
+                );
+
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   EVENT LISTENERS
+========================================================= */
+
+document.getElementById(
+    "materialSelect"
+).addEventListener(
+    "change",
+    onMaterialChanged
+);
+
+
+document.getElementById(
+    "quantity"
+).addEventListener(
+    "input",
+    updatePreview
+);
+
+
+document
+    .querySelectorAll(
+        'input[name="movement_type"]'
+    )
+    .forEach(
+        radio => {
+
+            radio.addEventListener(
+                "change",
+                updateMovementFields
+            );
+
+        }
+    );
+
+
+document.getElementById(
+    "movementForm"
+).addEventListener(
+    "submit",
+    saveMovement
+);
+
+
+document.getElementById(
+    "historySearch"
+).addEventListener(
+    "input",
+    renderHistory
+);
+
+
+document.getElementById(
+    "historyType"
+).addEventListener(
+    "change",
+    renderHistory
+);
+
+
+/* =========================================================
+   CLOSE MODAL WHEN CLICKING BACKGROUND
+========================================================= */
+
+document.getElementById(
+    "movementModal"
+).addEventListener(
+    "click",
+    event => {
+
+        if(
+            event.target.id ===
+            "movementModal"
+        ){
+
+            closeMovementForm();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   ESC KEY CLOSES MODAL
+========================================================= */
+
+document.addEventListener(
+    "keydown",
+    event => {
+
+        if(
+            event.key === "Escape"
+        ){
+
+            closeMovementForm();
+
+        }
+
+    }
+);
+
+
+/* =========================================================
+   INITIAL LOAD
+========================================================= */
+
+document.addEventListener(
+    "DOMContentLoaded",
+    async () => {
+
+        setupMobileMenu();
+
+        updateMovementFields();
+
+        await loadMaterials();
+
+        await loadMovementHistory();
+
+    }
+);
+
+
+/* =========================================================
+   NAVIGATION
+========================================================= */
+
+function goToRegister(){
+
+    window.location.href =
+        "register.html";
+
+}
+
+
+function logout(){
+
+    localStorage.removeItem(
+        "token"
+    );
+
+    localStorage.removeItem(
+        "user"
+    );
+
+    sessionStorage.clear();
+
+
+    window.location.href =
+        "login.html";
+
+}
+
+</script>
+    <script>
+        // Sidebar controls from the supplied dashboard template.
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+        const stockToggle = document.getElementById('stockToggle');
+        const stockSubmenu = document.getElementById('stockSubmenu');
+        const stockChevron = document.getElementById('stockChevron');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarBackdrop.classList.toggle('hidden');
+        }
+        hamburgerBtn?.addEventListener('click', toggleSidebar);
+        closeSidebar?.addEventListener('click', toggleSidebar);
+        sidebarBackdrop?.addEventListener('click', toggleSidebar);
+        stockToggle?.addEventListener('click', () => {
+            stockSubmenu.classList.toggle('hidden');
+            stockChevron.classList.toggle('rotate-180');
+        });
+
+        document.querySelectorAll('aside nav a').forEach(link => {
+            if (link.getAttribute('href') === 'movement.html') {
+                link.classList.remove('text-gray-600', 'hover:bg-primaryLight', 'hover:text-primary');
+                link.classList.add('bg-primary', 'text-white', 'shadow-md');
+            } else {
+                link.classList.remove('bg-primary', 'text-white', 'shadow-md');
+                link.classList.add('text-gray-600', 'hover:bg-primaryLight', 'hover:text-primary');
+            }
+            link.addEventListener('click', () => {
+                if (window.innerWidth < 1024 && !sidebar.classList.contains('-translate-x-full')) toggleSidebar();
+            });
+        });
+    </script>
+<script>
+(function () {
+    "use strict";
+
+    const currentPage = window.location.pathname;
+    const loginPage = "index.html";
+
+    // Ntukongere kugenzura login uri kuri index.html
+    if (
+        currentPage.endsWith("/index.html") ||
+        currentPage === "/" ||
+        currentPage.endsWith("/")
+    ) {
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    // Reba niba amakuru ya login ahari
+    if (!token && !user) {
+        sessionStorage.setItem(
+            "redirectAfterLogin",
+            window.location.href
+        );
+
+        window.location.replace(loginPage);
+    }
+})();
+</script>
+</body>
+</html>

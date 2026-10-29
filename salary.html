@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="unnamed.png">
+    <title>Salary | PLACOM LTD</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626', // Red 600
+                        primaryDark: '#b91c1c', // Red 700
+                        primaryLight: '#fef2f2', // Red 50
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+<style>
+.role-group-row td { background:#fff5f5; color:#9f1239; font-weight:700; padding:12px 20px; }
+.role-count { color:#9ca3af; font-size:12px; font-weight:500; margin-left:6px; }
+.worker-name { color:#111827; font-weight:600; }
+.role-badge { display:inline-flex; align-items:center; border-radius:999px; background:#fef2f2; color:#b91c1c; padding:5px 10px; font-size:12px; font-weight:600; }
+.salary { font-weight:600; white-space:nowrap; }
+.role-group-row td { background:#fff5f5; color:#9f1239; font-weight:700; padding:12px 20px; }
+.role-count { color:#9ca3af; font-size:12px; font-weight:500; margin-left:6px; }
+.worker-name { color:#111827; font-weight:600; }
+.salary { font-weight:600; white-space:nowrap; }
+#loading { display:block; }
+</style>
+
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- Top Mobile Header Bar -->
+    <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 lg:hidden z-30 shrink-0">
+        <div class="flex items-center space-x-3">
+            <button id="hamburgerBtn" class="text-gray-700 hover:text-primary focus:outline-none p-2 rounded-lg transition">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <span class="font-bold text-lg text-gray-900 tracking-wide">PLACOM LTD Dashboard</span>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button
+        onclick="window.location.href='register.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primaryDark text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow transition">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Register</span>
+    </button>
+        </div>
+    </header>
+
+    <!-- Main Wrapper (Sidebar + Body Area) -->
+    <div class="flex flex-1 overflow-hidden relative">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 lg:static lg:inset-auto transition-transform duration-300 ease-in-out flex flex-col shadow-lg lg:shadow-none">
+            <!-- Sidebar Header / Logo -->
+            <div class="h-16 flex items-center justify-between px-6 bg-primary text-white shrink-0 shadow-inner">
+                <div class="flex items-center space-x-2">
+                    <div class="bg-white text-primary p-2 rounded-lg font-bold flex items-center justify-center w-8 h-8 shadow">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <span class="font-bold text-lg tracking-wide">AdminPortal</span>
+                </div>
+                <button id="closeSidebar" class="text-white hover:text-gray-200 lg:hidden focus:outline-none">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links Scrollable Area -->
+            <nav class="flex-1 overflow-y-auto px-4 py-4 space-y-1.5">
+               
+                <a href="worker.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-users w-6 text-center mr-3 text-lg"></i>
+                    Worker
+                </a>
+                <a href="attendance.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-user-check w-6 text-center mr-3 text-lg"></i>
+                    Attendance
+                </a>
+                <a href="special-case.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-triangle-exclamation w-6 text-center mr-3 text-lg"></i>
+                    Special-case
+                </a>
+                <a href="salary.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-white bg-primary shadow-md transition group">
+                    <i class="fa-solid fa-wallet w-6 text-center mr-3 text-lg"></i>
+                    Salary
+                </a>
+                <a href="salary-record.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-file-invoice-dollar w-6 text-center mr-3 text-lg"></i>
+                    Salary Record
+                </a>
+                <a href="attendance-record.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-clipboard-user w-6 text-center mr-3 text-lg"></i>
+                    Attendance Record
+                </a>
+
+                <!-- Stock Submenu Dropdown -->
+                <div class="space-y-1">
+                    <button id="stockToggle" class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group focus:outline-none">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-boxes-stacked w-6 text-center mr-3 text-lg"></i>
+                            <span>Stock</span>
+                        </div>
+                        <i id="stockChevron" class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i>
+                    </button>
+                    <!-- Submenu Items -->
+                    <div id="stockSubmenu" class="hidden pl-11 pr-2 space-y-1">
+                        <a href="material.html" class="block px-3 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-primaryLight rounded-lg transition">
+                            <i class="fa-solid fa-box mr-2"></i> material
+                        </a>
+                        <a href="movement.html" class="block px-3 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-primaryLight rounded-lg transition">
+                            <i class="fa-solid fa-right-left mr-2"></i> movement
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Sidebar Footer Actions (Register & Logout) -->
+          <div class="p-4 border-t border-gray-200 space-y-2 bg-gray-50 shrink-0">
+    <button
+        onclick="window.location.href='register.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primaryDark text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow transition">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Register</span>
+    </button>
+
+    <button
+        onclick="window.location.href='index.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 py-2.5 px-4 rounded-xl text-sm font-semibold transition">
+        <i class="fa-solid fa-right-from-bracket text-red-600"></i>
+        <span>Logout</span>
+    </button>
+</div>
+        </aside>
+
+        <!-- Backdrop for mobile sidebar -->
+        <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden transition-opacity"></div>
+
+        <!-- Main Content Area & Footer Container -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Body Area (Scrollable Main Content) -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-gray-50">
+    <div class="max-w-7xl mx-auto space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <p class="text-sm font-semibold text-primary uppercase tracking-wider">Worker Management</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">Salary Management</h1>
+                <p class="text-sm text-gray-500 mt-2">Review worker salaries by role and check all salary records when ready.</p>
+            </div>
+            <button id="checkAllBtn" type="button" class="inline-flex items-center justify-center gap-2 bg-primary hover:bg-primaryDark disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold text-sm px-5 py-3 rounded-xl shadow-sm transition">
+                <i class="fa-solid fa-check-double"></i><span>✓ Check All Workers</span>
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+                <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-xl bg-red-50 text-primary flex items-center justify-center"><i class="fa-solid fa-wallet text-lg"></i></div><div><p class="text-sm text-gray-500">Salary overview</p><p class="font-semibold text-gray-900 mt-1">Worker salary list</p></div></div>
+            </div>
+            <div class="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm sm:col-span-2">
+                <div class="flex items-center gap-3"><div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center"><i class="fa-solid fa-triangle-exclamation text-lg"></i></div><div><p class="font-semibold text-gray-900">Before checking salaries</p><p class="text-sm text-gray-500 mt-1">This action may save salary records or reset current salaries depending on your PHP endpoint. Confirm carefully before continuing.</p></div></div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+            <div class="flex items-center gap-3">
+                <div class="w-11 h-11 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <i class="fa-solid fa-sack-dollar text-lg"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-500">Total Salaries</p>
+                    <p id="totalSalaries" class="text-2xl font-bold text-gray-900 mt-1">Loading...</p>
+                    <p id="totalSalariesRecords" class="text-xs text-gray-500 mt-1">Calculating salary total</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="success" class="hidden rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800 p-4 text-sm" role="status"></div>
+        <div id="error" class="hidden rounded-xl border border-red-200 bg-red-50 text-red-700 p-4 text-sm" role="alert"></div>
+
+        <section class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="p-5 sm:p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Worker Salaries</h2>
+                    <p class="text-sm text-gray-500 mt-1">Workers are grouped by role and sorted by name.</p>
+                    <p id="paymentProgress" class="text-sm font-semibold text-primary mt-2" aria-live="polite">Payment progress: 0 / 0 workers checked</p>
+                    <p class="text-xs text-gray-400 mt-1">Checkboxes are for your visual tracking only. They do not record a payment or change salary data.</p>
+                </div>
+                <button type="button" id="refreshSalariesBtn" class="inline-flex items-center justify-center gap-2 border border-gray-200 bg-white hover:bg-gray-50 text-gray-700 text-sm font-semibold px-4 py-2.5 rounded-xl transition"><i class="fa-solid fa-rotate-right"></i> Refresh</button>
+            </div>
+            <div id="loading" class="p-10 text-center text-gray-500"><i class="fa-solid fa-spinner fa-spin text-primary text-xl"></i><p class="mt-3 text-sm">Loading worker salaries...</p></div>
+            <div id="noWorkers" class="hidden p-10 text-center text-gray-500 text-sm">No worker salaries found.</div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm min-w-[650px]">
+                    <thead class="bg-gray-50 text-gray-500 uppercase text-xs tracking-wider"><tr><th class="px-5 py-4 font-semibold">#</th><th class="px-5 py-4 font-semibold">Worker name</th><th class="px-5 py-4 font-semibold">Phone</th><th class="px-5 py-4 font-semibold">Salary</th><th class="px-5 py-4 font-semibold text-center">Payment check</th></tr></thead>
+                    <tbody id="salaryTableBody" class="divide-y divide-gray-100"></tbody>
+                </table>
+            </div>
+        </section>
+    </div>
+</main>
+
+<script>
+
+const PHP_API_URL = "https://mail.placomltd.co.rw/success-php/api/salary";
+const SALARY_URL = `${PHP_API_URL}/all.php`;
+const CHECK_ALL_URL = `${PHP_API_URL}/check-all.php`;
+const TOTAL_SALARIES_URL = `${PHP_API_URL}/total-salaries.php`;
+let isLoadingSalaries = false;
+let isCheckingSalaries = false;
+
+/* Visual-only payment checklist. It never sends data to the API or database. */
+const paymentChecklistState = new Map();
+
+function updatePaymentProgress() {
+    const checkboxes = Array.from(document.querySelectorAll(".payment-progress-checkbox"));
+    const checkedCount = checkboxes.filter(checkbox => checkbox.checked).length;
+    const progress = document.getElementById("paymentProgress");
+    if (progress) {
+        progress.textContent = `Payment progress: ${checkedCount} / ${checkboxes.length} workers checked`;
+    }
+}
+function escapeHtml(value) {
+    return String(value ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;");
+}
+function formatSalary(salary) {
+    if (salary === null || salary === undefined || salary === "") return "0 RWF";
+    const amount = Number(salary);
+    if (!Number.isFinite(amount)) return "0 RWF";
+    return amount.toLocaleString("en-US") + " RWF";
+}
+async function readApiResponse(response) {
+    const contentType = response.headers.get("content-type") || "";
+    const responseText = await response.text();
+    if (!responseText.trim()) throw new Error(response.ok ? "The server returned an empty response." : `Server error: HTTP ${response.status}`);
+    if (!contentType.includes("application/json")) throw new Error("The server returned a non-JSON response. Check the PHP API URL and PHP errors.");
+    let data;
+    try { data = JSON.parse(responseText); } catch { throw new Error("The server returned invalid JSON."); }
+    if (!response.ok) throw new Error(data.message || `Request failed with HTTP ${response.status}.`);
+    if (data && data.success === false) throw new Error(data.message || "The operation was unsuccessful.");
+    return data;
+}
+function showStatus(id, message) {
+    const element = document.getElementById(id);
+    element.textContent = message || "";
+    element.classList.toggle("hidden", !message);
+}
+async function loadTotalSalaries() {
+    const totalElement = document.getElementById("totalSalaries");
+    const recordsElement = document.getElementById("totalSalariesRecords");
+
+    try {
+        const response = await fetch(TOTAL_SALARIES_URL, {
+            method: "GET",
+            headers: { Accept: "application/json" },
+            cache: "no-store"
+        });
+        const data = await readApiResponse(response);
+
+        const total = data.total_salaries ?? data.total_salary ?? data.total ?? 0;
+        const records = data.salary_records ?? data.records_count ?? data.count ?? 0;
+
+        totalElement.textContent = formatSalary(total);
+        recordsElement.textContent = `${Number(records).toLocaleString("en-US")} salary records`;
+    } catch (err) {
+        console.error("Load total salaries error:", err);
+        totalElement.textContent = "Unavailable";
+        recordsElement.textContent = err.message || "Could not load total salaries";
+    }
+}
+
+async function loadWorkerSalaries() {
+    if (isLoadingSalaries) return;
+    const tableBody = document.getElementById("salaryTableBody");
+    const loading = document.getElementById("loading");
+    const noWorkers = document.getElementById("noWorkers");
+    isLoadingSalaries = true;
+    tableBody.innerHTML = ""; showStatus("error", ""); noWorkers.classList.add("hidden"); loading.style.display = "block";
+    try {
+        const response = await fetch(SALARY_URL, {method:"GET", headers:{Accept:"application/json"}, cache:"no-store"});
+        const data = await readApiResponse(response);
+        const workers = Array.isArray(data) ? data : Array.isArray(data.workers) ? data.workers : Array.isArray(data.data) ? data.data : [];
+        loading.style.display = "none";
+        if (!workers.length) { noWorkers.classList.remove("hidden"); return; }
+        const groupedWorkers = {};
+        workers.forEach(worker => {
+            const role = String(worker.role || "Other").trim() || "Other";
+            const roleKey = role.toLowerCase();
+            if (!groupedWorkers[roleKey]) groupedWorkers[roleKey] = {name:role, workers:[]};
+            groupedWorkers[roleKey].workers.push(worker);
+        });
+        const sortedRoles = Object.values(groupedWorkers).sort((a,b)=>a.name.localeCompare(b.name));
+        let workerNumber = 0;
+        sortedRoles.forEach(group => {
+            group.workers.sort((a,b)=>String(a.fullname || "").localeCompare(String(b.fullname || "")));
+            const roleRow = document.createElement("tr"); roleRow.className = "role-group-row";
+            roleRow.innerHTML = `<td colspan="5">${escapeHtml(group.name)} <span class="role-count">(${group.workers.length} ${group.workers.length === 1 ? "worker" : "workers"})</span></td>`;
+            tableBody.appendChild(roleRow);
+            group.workers.forEach(worker => {
+                workerNumber++;
+                const salary = worker.total_salary !== undefined && worker.total_salary !== null ? worker.total_salary : worker.salary;
+                const row = document.createElement("tr");
+                row.className = "hover:bg-gray-50";
+                const workerKey = String(worker.id ?? worker.worker_id ?? `${worker.fullname || ""}|${worker.phone_number || ""}`);
+                row.innerHTML = `<td class="px-5 py-4 text-gray-500">${workerNumber}</td><td class="px-5 py-4 worker-name">${escapeHtml(worker.fullname || "-")}</td><td class="px-5 py-4">${escapeHtml(worker.phone_number || "-")}</td><td class="px-5 py-4 salary"><strong>${formatSalary(salary)}</strong></td><td class="px-5 py-4 text-center"><label class="inline-flex items-center justify-center cursor-pointer" title="Visual payment progress only"><input type="checkbox" class="payment-progress-checkbox h-5 w-5 accent-red-600 rounded cursor-pointer" data-worker-key="${escapeHtml(workerKey)}" aria-label="Mark ${escapeHtml(worker.fullname || "worker")} as checked for payment progress"></label></td>`;
+                const paymentCheckbox = row.querySelector(".payment-progress-checkbox");
+                paymentCheckbox.checked = paymentChecklistState.get(workerKey) === true;
+                tableBody.appendChild(row);
+            });
+        });
+        updatePaymentProgress();
+    } catch (err) {
+        console.error("Load salaries error:", err); loading.style.display = "none";
+        showStatus("error", err.message || "Unable to load worker salaries.");
+    } finally { isLoadingSalaries = false; }
+}
+async function checkAllSalaries() {
+    if (isCheckingSalaries) return;
+    const confirmed = confirm("Are you sure you want to check all workers' salaries?\n\nThis operation may save salary records and reset workers' current salaries to 0 RWF, depending on the implementation of check-all.php.");
+    if (!confirmed) return;
+    const checkButton = document.getElementById("checkAllBtn");
+    isCheckingSalaries = true; showStatus("error", ""); showStatus("success", ""); checkButton.disabled = true; checkButton.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Checking...';
+    try {
+        const response = await fetch(CHECK_ALL_URL, {method:"POST", headers:{"Content-Type":"application/json", Accept:"application/json"}});
+        const data = await readApiResponse(response);
+        showStatus("success", data.message || "Workers' salaries checked successfully.");
+        await Promise.all([loadWorkerSalaries(), loadTotalSalaries()]);
+    } catch (err) {
+        console.error("Check all salaries error:", err); showStatus("error", err.message || "Failed to check workers' salaries.");
+    } finally { isCheckingSalaries = false; checkButton.disabled = false; checkButton.innerHTML = '<i class="fa-solid fa-check-double"></i> ✓ Check All Workers'; }
+}
+function goToRegister() { window.location.href = "register.html"; }
+function logout() {
+    if (!confirm("Are you sure you want to logout?")) return;
+    ["user","userId","userName","userPhone","userRole"].forEach(key=>localStorage.removeItem(key));
+    window.location.replace("index.html");
+}
+document.getElementById("checkAllBtn").addEventListener("click", checkAllSalaries);
+
+/* Checking a box only updates this page's progress indicator. */
+document.getElementById("salaryTableBody").addEventListener("change", function(event) {
+    const checkbox = event.target.closest(".payment-progress-checkbox");
+    if (!checkbox) return;
+    paymentChecklistState.set(checkbox.dataset.workerKey, checkbox.checked);
+    updatePaymentProgress();
+});
+document.getElementById("refreshSalariesBtn").addEventListener("click", function() {
+    loadWorkerSalaries();
+    loadTotalSalaries();
+});
+document.addEventListener("DOMContentLoaded", function() {
+    if (localStorage.getItem("user")) {
+        loadWorkerSalaries();
+        loadTotalSalaries();
+    }
+});
+</script>
+
+    <!-- JavaScript for Mobile Sidebar & Stock Submenu Toggle -->
+    <script>
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+        const stockToggle = document.getElementById('stockToggle');
+        const stockSubmenu = document.getElementById('stockSubmenu');
+        const stockChevron = document.getElementById('stockChevron');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarBackdrop.classList.toggle('hidden');
+        }
+
+        hamburgerBtn.addEventListener('click', toggleSidebar);
+        closeSidebar.addEventListener('click', toggleSidebar);
+        sidebarBackdrop.addEventListener('click', toggleSidebar);
+
+        // Stock Submenu Toggle
+        stockToggle.addEventListener('click', () => {
+            stockSubmenu.classList.toggle('hidden');
+            stockChevron.classList.toggle('rotate-180');
+        });
+
+        // Active link switching visual effect
+        const navLinks = document.querySelectorAll('aside nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                navLinks.forEach(l => {
+                    if(!l.closest('#stockSubmenu')) {
+                        l.classList.remove('bg-primary', 'text-white', 'shadow-md');
+                        l.classList.add('text-gray-600', 'hover:bg-primaryLight', 'hover:text-primary');
+                    }
+                });
+                if(!this.closest('#stockSubmenu')) {
+                    this.classList.remove('text-gray-600', 'hover:bg-primaryLight', 'hover:text-primary');
+                    this.classList.add('bg-primary', 'text-white', 'shadow-md');
+                }
+                if (window.innerWidth < 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+    </script>
+<script>
+(function () {
+    "use strict";
+
+    const currentPage = window.location.pathname;
+    const loginPage = "index.html";
+
+    // Ntukongere kugenzura login uri kuri index.html
+    if (
+        currentPage.endsWith("/index.html") ||
+        currentPage === "/" ||
+        currentPage.endsWith("/")
+    ) {
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    // Reba niba amakuru ya login ahari
+    if (!token && !user) {
+        sessionStorage.setItem(
+            "redirectAfterLogin",
+            window.location.href
+        );
+
+        window.location.replace(loginPage);
+    }
+})();
+</script>
+</body>
+</html>

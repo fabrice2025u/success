@@ -1,0 +1,1042 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="unnamed.png">
+    <title>Special Case|PLACOM LTD</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626', // Red 600
+                        primaryDark: '#b91c1c', // Red 700
+                        primaryLight: '#fef2f2', // Red 50
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+<style>
+.role-group-row td { background:#fff5f5; color:#9f1239; font-weight:700; padding:12px 20px; }
+.role-count { color:#9ca3af; font-size:12px; font-weight:500; margin-left:6px; }
+.worker-name { color:#111827; font-weight:600; }
+.role-badge { display:inline-flex; align-items:center; border-radius:999px; background:#fef2f2; color:#b91c1c; padding:5px 10px; font-size:12px; font-weight:600; }
+.salary { font-weight:600; white-space:nowrap; }
+.special-case-btn { display:inline-flex; align-items:center; gap:7px; border-radius:10px; padding:9px 12px; background:#fff1f2; color:#be123c; border:1px solid #fecdd3; font-size:12px; font-weight:700; white-space:nowrap; }
+.special-case-btn:hover { background:#ffe4e6; }
+.special-modal { display:none; position:fixed; inset:0; z-index:100; background:rgba(17,24,39,.55); padding:20px; align-items:center; justify-content:center; overflow-y:auto; }
+.special-modal.show { display:flex; }
+.special-modal-card { width:100%; max-width:520px; background:#fff; border-radius:20px; box-shadow:0 25px 80px rgba(0,0,0,.22); overflow:hidden; max-height:calc(100vh - 40px); overflow-y:auto; }
+#specialCaseError { display:none; }
+#specialCaseSuccess { display:none; }
+#loading { display:block; }
+@media (max-width:640px) { .special-modal { padding:10px; } .special-modal-card { border-radius:16px; } }
+</style>
+
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- Top Mobile Header Bar -->
+    <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 lg:hidden z-30 shrink-0">
+        <div class="flex items-center space-x-3">
+            <button id="hamburgerBtn" class="text-gray-700 hover:text-primary focus:outline-none p-2 rounded-lg transition">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <span class="font-bold text-lg text-gray-900 tracking-wide">PLACOM LTD Dashboard</span>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button
+        onclick="window.location.href='register.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primaryDark text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow transition">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Register</span>
+    </button>
+        </div>
+    </header>
+
+    <!-- Main Wrapper (Sidebar + Body Area) -->
+    <div class="flex flex-1 overflow-hidden relative">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 lg:static lg:inset-auto transition-transform duration-300 ease-in-out flex flex-col shadow-lg lg:shadow-none">
+            <!-- Sidebar Header / Logo -->
+            <div class="h-16 flex items-center justify-between px-6 bg-primary text-white shrink-0 shadow-inner">
+                <div class="flex items-center space-x-2">
+                    <div class="bg-white text-primary p-2 rounded-lg font-bold flex items-center justify-center w-8 h-8 shadow">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <span class="font-bold text-lg tracking-wide">AdminPortal</span>
+                </div>
+                <button id="closeSidebar" class="text-white hover:text-gray-200 lg:hidden focus:outline-none">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links Scrollable Area -->
+            <nav class="flex-1 overflow-y-auto px-4 py-4 space-y-1.5">
+                
+                <a href="worker.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-users w-6 text-center mr-3 text-lg"></i>
+                    Worker
+                </a>
+                <a href="attendance.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-user-check w-6 text-center mr-3 text-lg"></i>
+                    Attendance
+                </a>
+                <a href="special-case.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-white bg-primary shadow-md transition group">
+                    <i class="fa-solid fa-triangle-exclamation w-6 text-center mr-3 text-lg"></i>
+                    Special-case
+                </a>
+                <a href="salary.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-wallet w-6 text-center mr-3 text-lg"></i>
+                    Salary
+                </a>
+                <a href="salary-record.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-file-invoice-dollar w-6 text-center mr-3 text-lg"></i>
+                    Salary Record
+                </a>
+                <a href="attendance-record.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-clipboard-user w-6 text-center mr-3 text-lg"></i>
+                    Attendance Record
+                </a>
+
+                <!-- Stock Submenu Dropdown -->
+                <div class="space-y-1">
+                    <button id="stockToggle" class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group focus:outline-none">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-boxes-stacked w-6 text-center mr-3 text-lg"></i>
+                            <span>Stock</span>
+                        </div>
+                        <i id="stockChevron" class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i>
+                    </button>
+                    <!-- Submenu Items -->
+                    <div id="stockSubmenu" class="hidden pl-11 pr-2 space-y-1">
+                        <a href="material.html" class="block px-3 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-primaryLight rounded-lg transition">
+                            <i class="fa-solid fa-box mr-2"></i> material
+                        </a>
+                        <a href="movement.html" class="block px-3 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-primaryLight rounded-lg transition">
+                            <i class="fa-solid fa-right-left mr-2"></i> movement
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Sidebar Footer Actions (Register & Logout) -->
+            <div class="p-4 border-t border-gray-200 space-y-2 bg-gray-50 shrink-0">
+    <button
+        onclick="window.location.href='register.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primaryDark text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow transition">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Register</span>
+    </button>
+
+    <button
+        onclick="window.location.href='index.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 py-2.5 px-4 rounded-xl text-sm font-semibold transition">
+        <i class="fa-solid fa-right-from-bracket text-red-600"></i>
+        <span>Logout</span>
+    </button>
+</div>
+        </aside>
+
+        <!-- Backdrop for mobile sidebar -->
+        <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden transition-opacity"></div>
+
+        <!-- Main Content Area & Footer Container -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Body Area (Scrollable Main Content) -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-gray-50">
+    <div class="max-w-7xl mx-auto space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+            <div>
+                <p class="text-sm font-semibold text-primary uppercase tracking-wider">Worker Management</p>
+                <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mt-1">Special Cases</h1>
+                <p class="text-sm text-gray-500 mt-2">Record an exceptional amount for a worker and provide the reason.</p>
+            </div>
+            <div class="flex items-center gap-2 text-sm text-gray-500 bg-white border border-gray-200 rounded-xl px-4 py-3 shadow-sm">
+                <i class="fa-solid fa-circle-info text-primary"></i>
+                <span>Choose a worker to add a special case</span>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm">
+                <div class="flex items-center justify-between">
+                    <div><p class="text-sm text-gray-500">Workers loaded</p><p id="workerCount" class="text-2xl font-bold text-gray-900 mt-1">—</p></div>
+                    <div class="w-11 h-11 rounded-xl bg-red-50 text-primary flex items-center justify-center"><i class="fa-solid fa-users text-lg"></i></div>
+                </div>
+            </div>
+            <div class="bg-white rounded-2xl border border-gray-200 p-5 shadow-sm sm:col-span-2">
+                <div class="flex items-center gap-3">
+                    <div class="w-11 h-11 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center"><i class="fa-solid fa-triangle-exclamation text-lg"></i></div>
+                    <div><p class="font-semibold text-gray-900">Special-case entry</p><p class="text-sm text-gray-500 mt-1">Use the action on a worker row. Enter a positive whole-number amount and a clear reason.</p></div>
+                </div>
+            </div>
+        </div>
+
+        <section class="bg-white rounded-2xl border border-gray-200 shadow-sm overflow-hidden">
+            <div class="p-5 sm:p-6 border-b border-gray-100 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                    <h2 class="text-lg font-bold text-gray-900">Workers</h2>
+                    <p id="searchInfo" class="text-sm text-gray-500 mt-1">Browse workers and select a special case.</p>
+                </div>
+                <div class="relative w-full sm:w-80">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    <input id="workerSearch" type="search" placeholder="Search name, phone, role, salary..." class="w-full pl-10 pr-10 py-2.5 border border-gray-200 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-primary">
+                    <button id="clearSearchBtn" type="button" aria-label="Clear search" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700"><i class="fa-solid fa-xmark"></i></button>
+                </div>
+            </div>
+
+            <div id="loading" class="p-10 text-center text-gray-500">
+                <i class="fa-solid fa-spinner fa-spin text-primary text-xl"></i>
+                <p class="mt-3 text-sm">Loading workers...</p>
+            </div>
+            <div id="error" class="hidden m-5 rounded-xl border border-red-200 bg-red-50 text-red-700 p-4 text-sm" role="alert"></div>
+            <div id="noWorkers" class="hidden p-10 text-center text-gray-500 text-sm">No workers found.</div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm min-w-[760px]">
+                    <thead class="bg-gray-50 text-gray-500 uppercase text-xs tracking-wider">
+                        <tr>
+                            <th class="px-5 py-4 font-semibold">#</th>
+                            <th class="px-5 py-4 font-semibold">Worker name</th>
+                            <th class="px-5 py-4 font-semibold">Phone</th>
+                            <th class="px-5 py-4 font-semibold">Role</th>
+                            <th class="px-5 py-4 font-semibold">Salary</th>
+                            <th class="px-5 py-4 font-semibold">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="workerTableBody" class="divide-y divide-gray-100"></tbody>
+                </table>
+            </div>
+        </section>
+        <div id="specialCaseSuccess" class="hidden rounded-xl border border-emerald-200 bg-emerald-50 text-emerald-800 p-4 text-sm" role="status"></div>
+    </div>
+</main>
+
+<!-- Special case modal -->
+<div id="specialCaseModal" class="special-modal" role="dialog" aria-modal="true" aria-labelledby="specialCaseTitle">
+    <div class="special-modal-card">
+        <div class="flex items-start justify-between gap-4 border-b border-gray-100 px-6 py-5">
+            <div>
+                <p class="text-xs font-bold uppercase tracking-wider text-primary">Worker adjustment</p>
+                <h2 id="specialCaseTitle" class="text-xl font-bold text-gray-900 mt-1">Add Special Case</h2>
+                <p class="text-sm text-gray-500 mt-1">Confirm the worker, amount and reason.</p>
+            </div>
+            <button type="button" class="text-gray-400 hover:text-gray-700 p-2" onclick="closeSpecialCaseModal()" aria-label="Close modal"><i class="fa-solid fa-xmark text-lg"></i></button>
+        </div>
+        <form id="specialCaseForm" class="p-6 space-y-5">
+            <div class="rounded-xl bg-gray-50 border border-gray-200 p-4">
+                <p id="selectedWorkerName" class="font-semibold text-gray-900">Worker</p>
+                <p id="selectedWorkerId" class="text-xs text-gray-500 mt-1">ID: —</p>
+                <p id="selectedWorkerSalary" class="text-sm text-gray-600 mt-2">Current Salary: —</p>
+            </div>
+            <div>
+                <label for="specialAmount" class="block text-sm font-semibold text-gray-700 mb-2">Special-case amount (RWF)</label>
+                <input id="specialAmount" type="number" min="1" step="1" required placeholder="Enter whole amount" class="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-primary">
+            </div>
+            <div>
+                <label for="specialReason" class="block text-sm font-semibold text-gray-700 mb-2">Reason</label>
+                <textarea id="specialReason" required rows="3" placeholder="Explain why this special case is needed..." class="w-full resize-y rounded-xl border border-gray-200 px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-red-100 focus:border-primary"></textarea>
+            </div>
+            <div id="specialCaseError" class="hidden rounded-lg bg-red-50 border border-red-200 p-3 text-sm text-red-700" role="alert"></div>
+            <div class="flex flex-col-reverse sm:flex-row sm:justify-end gap-3 pt-1">
+                <button type="button" onclick="closeSpecialCaseModal()" class="px-5 py-2.5 rounded-xl border border-gray-200 text-gray-700 font-semibold text-sm hover:bg-gray-50">Cancel</button>
+                <button id="saveSpecialCaseBtn" type="submit" class="px-5 py-2.5 rounded-xl bg-primary text-white font-semibold text-sm hover:bg-primaryDark disabled:opacity-60 disabled:cursor-not-allowed"><i class="fa-solid fa-check mr-2"></i>Add Special Case</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+            <!-- Footer Section (Quick Links & Developed by M TECH Ltd on the right) -->
+            <footer class="bg-white border-t border-gray-200 py-4 px-6 shrink-0 z-20">
+                <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-gray-500">
+                    
+                    <div class="font-medium text-gray-600">
+                        Developed by <span class="font-bold text-primary">M TECH Ltd</span>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+
+    </div>
+
+    <script>
+
+
+
+
+/* =====================================================
+   API URLS
+====================================================== */
+const PHP_API_URL = "https://mail.placomltd.co.rw/success-php/api";
+
+const WORKERS_URL =
+    `${PHP_API_URL}/workers/get.php`;
+
+const SPECIAL_CASE_CREATE_URL =
+    `${PHP_API_URL}/special-case/create.php`;
+
+/* =====================================================
+   GLOBAL DATA
+====================================================== */
+let allWorkers = [];
+let selectedWorker = null;
+let isLoadingWorkers = false;
+let isSavingSpecialCase = false;
+
+/* =====================================================
+   ESCAPE HTML
+====================================================== */
+function escapeHtml(value) {
+    return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+/* =====================================================
+   FORMAT SALARY
+====================================================== */
+function formatSalary(salary) {
+    if (salary === null || salary === undefined || salary === "") {
+        return "0 RWF";
+    }
+
+    const numericSalary = Number(salary);
+
+    if (!Number.isFinite(numericSalary)) {
+        return "0 RWF";
+    }
+
+    return numericSalary.toLocaleString("en-US") + " RWF";
+}
+
+/* =====================================================
+   API RESPONSE PARSER
+====================================================== */
+async function readJsonResponse(response) {
+    const contentType = response.headers.get("content-type") || "";
+    const responseText = await response.text();
+    const requestUrl = response.url || "(unknown URL)";
+
+    // Log the actual server response to help diagnose PHP/API problems.
+    console.groupCollapsed(
+        `[API] HTTP ${response.status} ${response.statusText || ""}`
+    );
+    console.log("URL:", requestUrl);
+    console.log("Content-Type:", contentType || "(missing)");
+    console.log("Response body:", responseText || "(empty response)");
+    console.groupEnd();
+
+    if (!responseText.trim()) {
+        throw new Error(
+            `API returned an empty response (HTTP ${response.status}). URL: ${requestUrl}`
+        );
+    }
+
+    let data;
+
+    try {
+        // Parse the body even if the server forgot the JSON Content-Type header.
+        data = JSON.parse(responseText);
+    } catch (parseError) {
+        const preview = responseText
+            .replace(/\\s+/g, " ")
+            .trim()
+            .slice(0, 350);
+
+        throw new Error(
+            `API did not return valid JSON (HTTP ${response.status}). ` +
+            `URL: ${requestUrl}. Content-Type: ${contentType || "missing"}. ` +
+            `Server response: ${preview}`
+        );
+    }
+
+    if (!response.ok) {
+        throw new Error(
+            (data && (data.message || data.error)) ||
+            `API request failed with HTTP ${response.status}. URL: ${requestUrl}`
+        );
+    }
+
+    return data;
+}
+
+/* =====================================================
+   LOAD WORKERS
+====================================================== */
+async function loadWorkers() {
+    if (isLoadingWorkers) return;
+
+    const tableBody = document.getElementById("workerTableBody");
+    const loading = document.getElementById("loading");
+    const error = document.getElementById("error");
+    const noWorkers = document.getElementById("noWorkers");
+
+    isLoadingWorkers = true;
+
+    tableBody.innerHTML = "";
+    error.textContent = "";
+    error.style.display = "none";
+    noWorkers.style.display = "none";
+    loading.style.display = "block";
+
+    try {
+        const response = await fetch(WORKERS_URL, {
+            method: "GET",
+            headers: {
+                "Accept": "application/json"
+            },
+            cache: "no-store"
+        });
+
+        const data = await readJsonResponse(response);
+
+        if (!response.ok || data.success === false) {
+            throw new Error(
+                data.message || "Failed to retrieve workers."
+            );
+        }
+
+        const workers = Array.isArray(data)
+            ? data
+            : Array.isArray(data.workers)
+                ? data.workers
+                : Array.isArray(data.data)
+                    ? data.data
+                    : [];
+
+        allWorkers = workers;
+
+        loading.style.display = "none";
+
+        if (document.getElementById("workerSearch").value.trim()) {
+            searchWorkers();
+        } else {
+            renderWorkers(allWorkers);
+        }
+
+    } catch (errorObject) {
+        loading.style.display = "none";
+
+        error.textContent =
+            errorObject.message ||
+            "Unable to load workers. Check that Apache and PHP are running.";
+        error.style.display = "block";
+
+    } finally {
+        isLoadingWorkers = false;
+    }
+}
+
+/* =====================================================
+   RENDER WORKERS
+====================================================== */
+function renderWorkers(workers) {
+    const tableBody = document.getElementById("workerTableBody");
+    const noWorkers = document.getElementById("noWorkers");
+    const searchInput = document.getElementById("workerSearch");
+    const searchInfo = document.getElementById("searchInfo");
+
+    tableBody.innerHTML = "";
+    noWorkers.style.display = "none";
+
+    if (!workers || workers.length === 0) {
+        noWorkers.textContent = searchInput.value.trim()
+            ? "No workers match your search."
+            : "No workers found.";
+
+        noWorkers.style.display = "block";
+        searchInfo.textContent = searchInput.value.trim()
+            ? "0 workers found"
+            : "";
+
+        return;
+    }
+
+    const groupedWorkers = {};
+
+    workers.forEach(function(worker) {
+        const role = String(worker.role || "Other").trim() || "Other";
+
+        if (!groupedWorkers[role]) {
+            groupedWorkers[role] = [];
+        }
+
+        groupedWorkers[role].push(worker);
+    });
+
+    const sortedRoles = Object.keys(groupedWorkers).sort(
+        function(a, b) {
+            return a.localeCompare(b, undefined, {
+                sensitivity: "base"
+            });
+        }
+    );
+
+    let rowNumber = 1;
+
+    sortedRoles.forEach(function(role) {
+        const roleWorkers = groupedWorkers[role];
+
+        roleWorkers.sort(function(a, b) {
+            return String(a.fullname || "").localeCompare(
+                String(b.fullname || ""),
+                undefined,
+                { sensitivity: "base" }
+            );
+        });
+
+        const roleRow = document.createElement("tr");
+        roleRow.className = "role-group-row";
+
+        roleRow.innerHTML = `
+            <td colspan="6">
+                Role: ${escapeHtml(role)}
+                <span class="role-count">
+                    (${roleWorkers.length}
+                    ${roleWorkers.length === 1 ? "worker" : "workers"})
+                </span>
+            </td>
+        `;
+
+        tableBody.appendChild(roleRow);
+
+        roleWorkers.forEach(function(worker) {
+            const row = document.createElement("tr");
+
+            const workerId = worker.id ?? worker._id ?? "";
+
+            row.innerHTML = `
+                <td>${rowNumber++}</td>
+
+                <td class="worker-name">
+                    ${escapeHtml(worker.fullname || "-")}
+                </td>
+
+                <td>
+                    ${escapeHtml(worker.phone_number || "-")}
+                </td>
+
+                <td>
+                    <span class="role-badge">
+                        ${escapeHtml(worker.role || "Other")}
+                    </span>
+                </td>
+
+                <td class="salary">
+                    ${formatSalary(worker.salary)}
+                </td>
+
+                <td>
+                    <button
+                        type="button"
+                        class="edit-btn special-case-btn"
+                    >
+                        + Special Case
+                    </button>
+                </td>
+            `;
+
+            row.querySelector(".special-case-btn").addEventListener(
+                "click",
+                function() {
+                    openSpecialCaseModal(worker);
+                }
+            );
+
+            tableBody.appendChild(row);
+        });
+    });
+
+    const countElement = document.getElementById("workerCount");
+    if (countElement) countElement.textContent = String(workers.length);
+
+    const searchValue = searchInput.value.trim();
+
+    searchInfo.textContent = searchValue
+        ? `${workers.length} ${workers.length === 1 ? "worker" : "workers"} found`
+        : "";
+}
+
+/* =====================================================
+   SEARCH
+====================================================== */
+function searchWorkers() {
+    const searchInput = document.getElementById("workerSearch");
+    const clearButton = document.getElementById("clearSearchBtn");
+
+    const searchValue = searchInput.value.trim().toLowerCase();
+
+    clearButton.style.display = searchValue ? "flex" : "none";
+
+    if (!searchValue) {
+        renderWorkers(allWorkers);
+        return;
+    }
+
+    const filteredWorkers = allWorkers.filter(function(worker) {
+        const fullname = String(worker.fullname || "").toLowerCase();
+        const phone = String(worker.phone_number || "").toLowerCase();
+        const role = String(worker.role || "").toLowerCase();
+        const salary = String(worker.salary ?? "").toLowerCase();
+
+        return (
+            fullname.includes(searchValue) ||
+            phone.includes(searchValue) ||
+            role.includes(searchValue) ||
+            salary.includes(searchValue)
+        );
+    });
+
+    renderWorkers(filteredWorkers);
+}
+
+/* =====================================================
+   CLEAR SEARCH
+====================================================== */
+function clearWorkerSearch() {
+    const searchInput = document.getElementById("workerSearch");
+
+    searchInput.value = "";
+    document.getElementById("clearSearchBtn").style.display = "none";
+
+    renderWorkers(allWorkers);
+    searchInput.focus();
+}
+
+/* =====================================================
+   OPEN MODAL
+====================================================== */
+function openSpecialCaseModal(worker) {
+    const workerId = worker.id ?? worker._id;
+
+    if (workerId === null || workerId === undefined || String(workerId).trim() === "") {
+        alert("Worker ID is missing.");
+        return;
+    }
+
+    selectedWorker = worker;
+
+    const form = document.getElementById("specialCaseForm");
+    form.dataset.workerId = String(workerId);
+
+    document.getElementById("selectedWorkerName").textContent =
+        worker.fullname || "Worker";
+
+    document.getElementById("selectedWorkerId").textContent =
+        "ID: " + String(workerId);
+
+    document.getElementById("selectedWorkerSalary").textContent =
+        "Current Salary: " + formatSalary(worker.salary);
+
+    document.getElementById("specialAmount").value = "";
+    document.getElementById("specialReason").value = "";
+
+    const error = document.getElementById("specialCaseError");
+    error.textContent = "";
+    error.style.display = "none";
+
+    document.getElementById("specialCaseModal").classList.add("show");
+    document.getElementById("specialAmount").focus();
+}
+
+/* =====================================================
+   CLOSE MODAL
+====================================================== */
+function closeSpecialCaseModal() {
+    if (isSavingSpecialCase) return;
+
+    const modal = document.getElementById("specialCaseModal");
+    const form = document.getElementById("specialCaseForm");
+    const error = document.getElementById("specialCaseError");
+
+    modal.classList.remove("show");
+    form.reset();
+    delete form.dataset.workerId;
+
+    error.textContent = "";
+    error.style.display = "none";
+
+    selectedWorker = null;
+}
+
+/* =====================================================
+   SHOW SPECIAL CASE ERROR
+====================================================== */
+function showSpecialCaseError(message) {
+    const error = document.getElementById("specialCaseError");
+
+    error.textContent = message;
+    error.style.display = "block";
+}
+
+/* =====================================================
+   SUBMIT SPECIAL CASE
+====================================================== */
+document.getElementById("specialCaseForm").addEventListener(
+    "submit",
+    async function(event) {
+        event.preventDefault();
+
+        if (isSavingSpecialCase) return;
+
+        const form = this;
+        const workerId = form.dataset.workerId;
+
+        if (!workerId) {
+            showSpecialCaseError("Worker ID is missing.");
+            return;
+        }
+
+        const amount = Number(
+            document.getElementById("specialAmount").value
+        );
+
+        const reason = document.getElementById("specialReason")
+            .value
+            .trim();
+
+        if (!Number.isFinite(amount) || amount <= 0) {
+            showSpecialCaseError("Please enter a valid amount.");
+            return;
+        }
+
+        if (!Number.isInteger(amount)) {
+            showSpecialCaseError("Please enter a whole-number amount.");
+            return;
+        }
+
+        if (!reason) {
+            showSpecialCaseError("Please enter the reason.");
+            return;
+        }
+
+        const saveButton = document.getElementById("saveSpecialCaseBtn");
+
+        isSavingSpecialCase = true;
+        saveButton.disabled = true;
+        saveButton.textContent = "Saving...";
+
+        try {
+            const response = await fetch(SPECIAL_CASE_CREATE_URL, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify({
+                    worker_id: workerId,
+                    amount: amount,
+                    reason: reason
+                })
+            });
+
+            const result = await readJsonResponse(response);
+
+            if (!response.ok || result.success === false) {
+                throw new Error(
+                    result.message || "Failed to create special case."
+                );
+            }
+
+            closeModalAfterSave();
+
+            const success = document.getElementById("specialCaseSuccess");
+            success.textContent =
+                result.message || "Special case added successfully.";
+            success.style.display = "block";
+
+            await loadWorkers();
+
+        } catch (errorObject) {
+            console.error("Special case error:", errorObject);
+
+            showSpecialCaseError(
+                errorObject.message || "Failed to create special case."
+            );
+
+        } finally {
+            isSavingSpecialCase = false;
+            saveButton.disabled = false;
+            saveButton.textContent = "Add Special Case";
+        }
+    }
+);
+
+/* =====================================================
+   CLOSE MODAL AFTER SUCCESSFUL SAVE
+====================================================== */
+function closeModalAfterSave() {
+    const modal = document.getElementById("specialCaseModal");
+    const form = document.getElementById("specialCaseForm");
+
+    modal.classList.remove("show");
+    form.reset();
+    delete form.dataset.workerId;
+
+    document.getElementById("specialCaseError").textContent = "";
+    document.getElementById("specialCaseError").style.display = "none";
+
+    selectedWorker = null;
+}
+
+/* =====================================================
+   REGISTER
+====================================================== */
+function goToRegister() {
+    window.location.href = "register.html";
+}
+
+/* =====================================================
+   LOGOUT
+====================================================== */
+function logout() {
+    if (!confirm("Are you sure you want to logout?")) {
+        return;
+    }
+
+    localStorage.removeItem("user");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userName");
+    localStorage.removeItem("userPhone");
+    localStorage.removeItem("userRole");
+
+    window.location.replace("index.html");
+}
+
+/* =====================================================
+   MOBILE HAMBURGER MENU
+====================================================== */
+(function setupMobileMenu() {
+    const navbar = document.getElementById("mobileNavigation");
+    const menuButton = document.getElementById("mobileMenuToggle");
+
+    if (!navbar || !menuButton) return;
+
+    function closeMobileMenu() {
+        navbar.classList.remove("mobile-open");
+
+        menuButton.setAttribute("aria-expanded", "false");
+        menuButton.setAttribute("aria-label", "Open navigation menu");
+
+        closeStockDropdown();
+    }
+
+    function toggleMobileMenu() {
+        const isOpen = navbar.classList.toggle("mobile-open");
+
+        menuButton.setAttribute("aria-expanded", String(isOpen));
+        menuButton.setAttribute(
+            "aria-label",
+            isOpen ? "Close navigation menu" : "Open navigation menu"
+        );
+
+        if (!isOpen) {
+            closeStockDropdown();
+        }
+    }
+
+    menuButton.addEventListener("click", toggleMobileMenu);
+
+    navbar.querySelectorAll(":scope > a").forEach(function(link) {
+        link.addEventListener("click", closeMobileMenu);
+    });
+
+    navbar.querySelectorAll(".header-actions button").forEach(function(button) {
+        button.addEventListener("click", closeMobileMenu);
+    });
+
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Escape") {
+            closeMobileMenu();
+
+            const modal = document.getElementById("specialCaseModal");
+            if (modal.classList.contains("show") && !isSavingSpecialCase) {
+                closeSpecialCaseModal();
+            }
+        }
+    });
+
+    window.addEventListener("resize", function() {
+        if (window.innerWidth > 600) {
+            closeMobileMenu();
+        }
+    });
+})();
+
+/* =====================================================
+   STOCK DROPDOWN
+====================================================== */
+(function setupStockDropdown() {
+    const dropdown = document.getElementById("stockDropdown");
+    const dropdownButton = document.getElementById("stockDropdownBtn");
+
+    if (!dropdown || !dropdownButton) return;
+
+    function closeStockDropdown() {
+        dropdown.classList.remove("mobile-stock-open");
+        dropdownButton.setAttribute("aria-expanded", "false");
+    }
+
+    dropdownButton.addEventListener("click", function(event) {
+        event.preventDefault();
+
+        if (window.innerWidth <= 600) {
+            const isOpen = dropdown.classList.toggle("mobile-stock-open");
+            dropdownButton.setAttribute("aria-expanded", String(isOpen));
+        } else {
+            const isOpen = dropdown.classList.toggle("desktop-stock-open");
+            dropdownButton.setAttribute("aria-expanded", String(isOpen));
+        }
+    });
+
+    dropdown.querySelectorAll(".dropdown-menu a").forEach(function(link) {
+        link.addEventListener("click", function() {
+            dropdown.classList.remove("mobile-stock-open");
+            dropdown.classList.remove("desktop-stock-open");
+            dropdownButton.setAttribute("aria-expanded", "false");
+
+            document.getElementById("mobileNavigation").classList.remove("mobile-open");
+            document.getElementById("mobileMenuToggle").setAttribute("aria-expanded", "false");
+        });
+    });
+
+    document.addEventListener("click", function(event) {
+        if (!dropdown.contains(event.target)) {
+            dropdown.classList.remove("desktop-stock-open");
+
+            if (window.innerWidth > 600) {
+                dropdownButton.setAttribute("aria-expanded", "false");
+            }
+        }
+    });
+
+    window.addEventListener("resize", function() {
+        closeStockDropdown();
+        dropdown.classList.remove("desktop-stock-open");
+    });
+})();
+
+/* =====================================================
+   SEARCH EVENT LISTENERS
+====================================================== */
+document.getElementById("workerSearch").addEventListener(
+    "input",
+    searchWorkers
+);
+
+document.getElementById("clearSearchBtn").addEventListener(
+    "click",
+    clearWorkerSearch
+);
+
+/* =====================================================
+   PAGE INITIALIZATION
+====================================================== */
+document.addEventListener("DOMContentLoaded", function() {
+    const storedUser = localStorage.getItem("user");
+
+    if (!storedUser) return;
+
+    loadWorkers();
+});
+    </script>
+
+    <!-- JavaScript for Mobile Sidebar & Stock Submenu Toggle -->
+    <script>
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+        const stockToggle = document.getElementById('stockToggle');
+        const stockSubmenu = document.getElementById('stockSubmenu');
+        const stockChevron = document.getElementById('stockChevron');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarBackdrop.classList.toggle('hidden');
+        }
+
+        hamburgerBtn.addEventListener('click', toggleSidebar);
+        closeSidebar.addEventListener('click', toggleSidebar);
+        sidebarBackdrop.addEventListener('click', toggleSidebar);
+
+        // Stock Submenu Toggle
+        stockToggle.addEventListener('click', () => {
+            stockSubmenu.classList.toggle('hidden');
+            stockChevron.classList.toggle('rotate-180');
+        });
+
+        // Active link switching visual effect
+        const navLinks = document.querySelectorAll('aside nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                navLinks.forEach(l => {
+                    if(!l.closest('#stockSubmenu')) {
+                        l.classList.remove('bg-primary', 'text-white', 'shadow-md');
+                        l.classList.add('text-gray-600', 'hover:bg-primaryLight', 'hover:text-primary');
+                    }
+                });
+                if(!this.closest('#stockSubmenu')) {
+                    this.classList.remove('text-gray-600', 'hover:bg-primaryLight', 'hover:text-primary');
+                    this.classList.add('bg-primary', 'text-white', 'shadow-md');
+                }
+                if (window.innerWidth < 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+    </script>
+    
+    <script>
+(function () {
+    "use strict";
+
+    const currentPage = window.location.pathname;
+    const loginPage = "index.html";
+
+    // Ntukongere kugenzura login uri kuri index.html
+    if (
+        currentPage.endsWith("/index.html") ||
+        currentPage === "/" ||
+        currentPage.endsWith("/")
+    ) {
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    // Reba niba amakuru ya login ahari
+    if (!token && !user) {
+        sessionStorage.setItem(
+            "redirectAfterLogin",
+            window.location.href
+        );
+
+        window.location.replace(loginPage);
+    }
+})();
+</script>
+
+</body>
+</html>

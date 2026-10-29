@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="unnamed.png">
+    <title>Attendance | PLACOM LTD</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Font Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#dc2626', // Red 600
+                        primaryDark: '#b91c1c', // Red 700
+                        primaryLight: '#fef2f2', // Red 50
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-gray-100 font-sans text-gray-800 antialiased h-screen flex flex-col overflow-hidden">
+
+    <!-- Top Mobile Header Bar -->
+    <header class="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-4 lg:hidden z-30 shrink-0">
+        <div class="flex items-center space-x-3">
+            <button id="hamburgerBtn" class="text-gray-700 hover:text-primary focus:outline-none p-2 rounded-lg transition">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+            <span class="font-bold text-lg text-gray-900 tracking-wide">PLACOM LTD Dashboard</span>
+        </div>
+        <div class="flex items-center space-x-2">
+            <button
+        onclick="window.location.href='register.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primaryDark text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow transition">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Register</span>
+    </button>
+        </div>
+    </header>
+
+    <!-- Main Wrapper (Sidebar + Body Area) -->
+    <div class="flex flex-1 overflow-hidden relative">
+
+        <!-- Sidebar Navigation -->
+        <aside id="sidebar" class="fixed inset-y-0 left-0 z-40 w-64 bg-white border-r border-gray-200 transform -translate-x-full lg:translate-x-0 lg:static lg:inset-auto transition-transform duration-300 ease-in-out flex flex-col shadow-lg lg:shadow-none">
+            <!-- Sidebar Header / Logo -->
+            <div class="h-16 flex items-center justify-between px-6 bg-primary text-white shrink-0 shadow-inner">
+                <div class="flex items-center space-x-2">
+                    <div class="bg-white text-primary p-2 rounded-lg font-bold flex items-center justify-center w-8 h-8 shadow">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <span class="font-bold text-lg tracking-wide">AdminPortal</span>
+                </div>
+                <button id="closeSidebar" class="text-white hover:text-gray-200 lg:hidden focus:outline-none">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+
+            <!-- Navigation Links Scrollable Area -->
+            <nav class="flex-1 overflow-y-auto px-4 py-4 space-y-1.5">
+              
+                <a href="worker.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-users w-6 text-center mr-3 text-lg"></i>
+                    Worker
+                </a>
+                <a href="attendance.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-white bg-primary shadow-md transition group">
+                    <i class="fa-solid fa-user-check w-6 text-center mr-3 text-lg"></i>
+                    Attendance
+                </a>
+                <a href="special-case.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-triangle-exclamation w-6 text-center mr-3 text-lg"></i>
+                    Special-case
+                </a>
+                <a href="salary.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-wallet w-6 text-center mr-3 text-lg"></i>
+                    Salary
+                </a>
+                <a href="salary-record.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-file-invoice-dollar w-6 text-center mr-3 text-lg"></i>
+                    Salary Record
+                </a>
+                <a href="attendance-record.html" class="flex items-center px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group">
+                    <i class="fa-solid fa-clipboard-user w-6 text-center mr-3 text-lg"></i>
+                    Attendance Record
+                </a>
+
+                <!-- Stock Submenu Dropdown -->
+                <div class="space-y-1">
+                    <button id="stockToggle" class="w-full flex items-center justify-between px-4 py-3 text-sm font-medium rounded-xl text-gray-600 hover:bg-primaryLight hover:text-primary transition group focus:outline-none">
+                        <div class="flex items-center">
+                            <i class="fa-solid fa-boxes-stacked w-6 text-center mr-3 text-lg"></i>
+                            <span>Stock</span>
+                        </div>
+                        <i id="stockChevron" class="fa-solid fa-chevron-down text-xs transition-transform duration-200"></i>
+                    </button>
+                    <!-- Submenu Items -->
+                    <div id="stockSubmenu" class="hidden pl-11 pr-2 space-y-1">
+                        <a href="material.html" class="block px-3 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-primaryLight rounded-lg transition">
+                            <i class="fa-solid fa-box mr-2"></i> material
+                        </a>
+                        <a href="movement.html" class="block px-3 py-2 text-xs font-medium text-gray-500 hover:text-primary hover:bg-primaryLight rounded-lg transition">
+                            <i class="fa-solid fa-right-left mr-2"></i> movement
+                        </a>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Sidebar Footer Actions (Register & Logout) -->
+                <div class="p-4 border-t border-gray-200 space-y-2 bg-gray-50 shrink-0">
+    <button
+        onclick="window.location.href='register.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-primary hover:bg-primaryDark text-white py-2.5 px-4 rounded-xl text-sm font-semibold shadow transition">
+        <i class="fa-solid fa-user-plus"></i>
+        <span>Register</span>
+    </button>
+
+    <button
+        onclick="window.location.href='index.html'"
+        class="w-full flex items-center justify-center space-x-2 bg-white border border-gray-300 hover:bg-gray-100 text-gray-700 py-2.5 px-4 rounded-xl text-sm font-semibold transition">
+        <i class="fa-solid fa-right-from-bracket text-red-600"></i>
+        <span>Logout</span>
+    </button>
+</div>
+        </aside>
+
+        <!-- Backdrop for mobile sidebar -->
+        <div id="sidebarBackdrop" class="fixed inset-0 bg-black/50 z-30 hidden lg:hidden transition-opacity"></div>
+
+        <!-- Main Content Area & Footer Container -->
+        <div class="flex-1 flex flex-col overflow-hidden">
+
+            <!-- Body Area (Scrollable Main Content) -->
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8 bg-gray-50">
+                <div class="max-w-7xl mx-auto space-y-6">
+                    
+                    <!-- Attendance Page Header -->
+                    <div class="bg-white rounded-2xl p-6 shadow-sm border border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <h1 class="text-2xl font-bold text-gray-900">Worker Attendance</h1>
+                            <p class="text-sm text-gray-500 mt-1">Record today's attendance for registered workers.</p>
+                        </div>
+                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-emerald-100 text-emerald-800">
+                            <span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Attendance
+                        </span>
+                    </div>
+
+                    <!-- Attendance Summary -->
+                    <div class="bg-white rounded-2xl p-5 shadow-sm border border-gray-200">
+                        <div class="flex items-start gap-3">
+                            <div class="w-11 h-11 bg-primaryLight text-primary rounded-xl flex items-center justify-center text-lg">
+                                <i class="fa-solid fa-calendar-check"></i>
+                            </div>
+                            <div>
+                                <h2 class="font-bold text-gray-900">Today's attendance</h2>
+                                <p id="attendanceSummary" class="text-sm text-gray-500 mt-1">Loading attendance summary...</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Attendance Table -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
+                        <div class="p-5 sm:p-6 border-b border-gray-200 flex flex-col lg:flex-row lg:items-center justify-between gap-4">
+                            <div>
+                                <h2 class="text-lg font-bold text-gray-900">Workers</h2>
+                                <p class="text-sm text-gray-500 mt-1">Choose Present or Absent for each worker, then save.</p>
+                            </div>
+                            <div class="relative w-full lg:w-80">
+                                <i class="fa-solid fa-magnifying-glass absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                                <input id="attendanceSearch" type="search" placeholder="Search name, phone, role or salary..."
+                                    class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-red-200 focus:border-primary">
+                            </div>
+                        </div>
+                        <div id="loading" class="px-6 py-8 text-center text-sm text-gray-500">
+                            <i class="fa-solid fa-spinner fa-spin mr-2"></i>Loading workers...
+                        </div>
+                        <div class="overflow-x-auto">
+                            <form id="attendanceForm">
+                                <table class="w-full text-sm text-left">
+                                    <thead class="bg-gray-50 text-xs uppercase tracking-wider text-gray-500">
+                                        <tr>
+                                            <th class="px-5 py-4 font-semibold">#</th>
+                                            <th class="px-5 py-4 font-semibold">Worker Name</th>
+                                            <th class="px-5 py-4 font-semibold">Phone</th>
+                                            <th class="px-5 py-4 font-semibold">Role</th>
+                                            <th class="px-5 py-4 font-semibold">Salary</th>
+                                            <th class="px-5 py-4 font-semibold">Attendance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="attendanceTableBody" class="divide-y divide-gray-100"></tbody>
+                                </table>
+                                <div class="p-5 border-t border-gray-200 flex flex-col sm:flex-row gap-3 justify-between">
+                                    <div class="flex flex-wrap gap-2">
+                                        <button type="button" onclick="checkAllPresent()" class="px-4 py-2.5 rounded-xl border border-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-50 transition">
+                                            <i class="fa-solid fa-check-double mr-2"></i>All Present
+                                        </button>
+                                        <button type="button" onclick="clearAttendance()" class="px-4 py-2.5 rounded-xl border border-gray-300 text-gray-700 text-sm font-semibold hover:bg-gray-50 transition">
+                                            <i class="fa-solid fa-eraser mr-2"></i>Clear
+                                        </button>
+                                    </div>
+                                    <button id="submitAttendanceBtn" type="submit" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primaryDark text-white text-sm font-semibold shadow-sm transition">
+                                        <i class="fa-solid fa-floppy-disk mr-2"></i>Save Attendance
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                        <div id="attendanceMessage" role="status" aria-live="polite" class="hidden whitespace-pre-line px-6 py-4 text-sm text-gray-700 bg-gray-50 border-t border-gray-200"></div>
+                    </div>
+
+                    <style>
+                        .role-group-row td { background:#fef2f2; color:#991b1b; font-weight:700; padding:12px 20px; }
+                        .role-count { margin-left:8px; color:#b91c1c; font-size:12px; font-weight:600; }
+                        #attendanceTableBody .worker-row:hover { background:#fafafa; }
+                        #attendanceTableBody td { padding:14px 20px; color:#374151; white-space:nowrap; }
+                        .role-badge { display:inline-flex; padding:4px 10px; border-radius:999px; background:#fef2f2; color:#b91c1c; font-size:12px; font-weight:600; }
+                        .salary { font-weight:600; color:#111827 !important; }
+                        .already-recorded-row { background:#f0fdf4; }
+                        .attendance-disabled { opacity:.75; }
+                        .attendance-status { display:inline-flex; align-items:center; font-size:11px; font-weight:600; padding:4px 8px; border-radius:999px; }
+                        .attendance-status.recorded { background:#dcfce7; color:#166534; }
+                        .attendance-status.not-recorded { background:#f3f4f6; color:#6b7280; }
+                        #attendanceTableBody input[type=radio] { accent-color:#dc2626; margin-right:5px; }
+                        #attendanceMessage:not(:empty) { display:block; }
+                        #attendanceMessage.message-error { background:#fef2f2; color:#991b1b; }
+                        #attendanceMessage.message-success { background:#f0fdf4; color:#166534; }
+                    </style>
+
+                </div>
+            </main>
+
+            <!-- Footer Section (Quick Links & Developed by M TECH Ltd on the right) -->
+            <footer class="bg-white border-t border-gray-200 py-4 px-6 shrink-0 z-20">
+                <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-3 text-xs text-gray-500">
+                    
+                    <div class="font-medium text-gray-600">
+                        Developed by <span class="font-bold text-primary">M TECH Ltd</span>
+                    </div>
+                </div>
+            </footer>
+
+        </div>
+
+    </div>
+
+    <!-- Attendance functionality -->   <script>
+/* =========================================================
+   PHP API
+========================================================= */
+
+const WORKER_API_URL = "https://mail.placomltd.co.rw/success-php/api/workers";
+const ATTENDANCE_API_URL = "https://mail.placomltd.co.rw/success-php/api/attendance";
+
+/*
+ * PHP endpoints:
+ * GET  /workers/get.php
+ * GET  /attendance/get-today.php
+ * POST /attendance/register.php?id=WORKER_ID
+ */
+
+/* =========================================================
+   VARIABLES
+========================================================= */
+
+let workers = [];
+let todayAttendance = [];
+let recordedWorkerIds = new Set();
+let currentSearchTerm = "";
+
+/* =========================================================
+   HELPERS
+========================================================= */
+
+function getWorkerId(worker) {
+    return String(worker?.id || worker?._id || "");
+}
+
+function normalizeList(data, keys = []) {
+    if (Array.isArray(data)) return data;
+
+    for (const key of keys) {
+        if (Array.isArray(data?.[key])) return data[key];
+    }
+
+    if (Array.isArray(data?.data)) return data.data;
+    return [];
+}
+
+function normalizeAttendanceList(data) {
+    return normalizeList(data, ["attendance", "records"]);
+}
+
+function escapeHtml(value) {
+    return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+}
+
+function formatSalary(salary) {
+    if (salary === null || salary === undefined || salary === "") {
+        return "0 RWF";
+    }
+
+    const number = Number(salary);
+    if (Number.isNaN(number)) return `${escapeHtml(salary)} RWF`;
+
+    return number.toLocaleString("en-US") + " RWF";
+}
+
+function showMessage(message) {
+    const element = document.getElementById("attendanceMessage");
+    element.textContent = message || "";
+    element.classList.toggle("hidden", !message);
+    element.classList.remove("message-error", "message-success");
+    if (message) element.classList.add(message.startsWith("✓") ? "message-success" : "message-error");
+}
+
+/* =========================================================
+   LOAD WORKERS FROM PHP
+========================================================= */
+
+async function loadWorkers() {
+    const tableBody = document.getElementById("attendanceTableBody");
+    const loading = document.getElementById("loading");
+
+    tableBody.innerHTML = "";
+    showMessage("");
+    loading.style.display = "block";
+
+    try {
+        const response = await fetch(`${WORKER_API_URL}/get.php`, {
+            headers: { "Accept": "application/json" }
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || result.success === false) {
+            throw new Error(result.message || "Failed to load workers.");
+        }
+
+        workers = normalizeList(result, ["workers"]);
+        await loadTodayAttendance();
+
+        loading.style.display = "none";
+        filterWorkers();
+
+    } catch (error) {
+        loading.style.display = "none";
+        showMessage(error.message || "Failed to load workers.");
+        console.error("Load workers error:", error);
+    }
+}
+
+/* =========================================================
+   LOAD TODAY'S ATTENDANCE FROM PHP
+========================================================= */
+
+async function loadTodayAttendance() {
+    const summary = document.getElementById("attendanceSummary");
+
+    summary.textContent = "Checking today's attendance...";
+
+    try {
+        const response = await fetch(
+            `${ATTENDANCE_API_URL}/get-today.php`,
+            { headers: { "Accept": "application/json" } }
+        );
+
+        const result = await response.json();
+
+        if (!response.ok || result.success === false) {
+            throw new Error(
+                result.message || "Failed to load today's attendance."
+            );
+        }
+
+        todayAttendance = normalizeAttendanceList(result);
+
+        recordedWorkerIds = new Set();
+
+        todayAttendance.forEach(attendance => {
+            const workerId = String(
+                attendance.worker_id ??
+                attendance.workerId ??
+                attendance.worker?.id ??
+                attendance.worker?._id ??
+                attendance.id_worker ??
+                ""
+            );
+
+            if (workerId) {
+                recordedWorkerIds.add(workerId);
+            }
+        });
+
+        updateAttendanceSummary();
+
+    } catch (error) {
+        console.error("Today's attendance error:", error);
+
+        todayAttendance = [];
+        recordedWorkerIds = new Set();
+
+        summary.textContent =
+            "Today's attendance could not be checked. Server validation is still active.";
+    }
+}
+
+/* =========================================================
+   SUMMARY
+========================================================= */
+
+function updateAttendanceSummary() {
+    const summary = document.getElementById("attendanceSummary");
+
+    const totalWorkers = workers.length;
+    const recordedCount = recordedWorkerIds.size;
+    const remaining = Math.max(totalWorkers - recordedCount, 0);
+
+    summary.textContent =
+        `${recordedCount} of ${totalWorkers} workers recorded today. ${remaining} remaining.`;
+}
+
+/* =========================================================
+   SEARCH
+========================================================= */
+
+function filterWorkers() {
+    const searchInput = document.getElementById("attendanceSearch");
+
+    const searchTerm = searchInput
+        ? searchInput.value.trim().toLowerCase()
+        : "";
+
+    currentSearchTerm = searchTerm;
+
+    if (!searchTerm) {
+        renderWorkers(workers);
+        return;
+    }
+
+    const filteredWorkers = workers.filter(worker => {
+        const fullname = String(worker.fullname || "").toLowerCase();
+        const phone = String(worker.phone_number || "").toLowerCase();
+        const role = String(worker.role || "").toLowerCase();
+        const salary = String(worker.salary ?? "").toLowerCase();
+
+        const formattedSalary =
+            worker.salary !== null &&
+            worker.salary !== undefined &&
+            worker.salary !== ""
+                ? Number(worker.salary).toLocaleString("en-US").toLowerCase()
+                : "";
+
+        return (
+            fullname.includes(searchTerm) ||
+            phone.includes(searchTerm) ||
+            role.includes(searchTerm) ||
+            salary.includes(searchTerm) ||
+            formattedSalary.includes(searchTerm)
+        );
+    });
+
+    renderWorkers(filteredWorkers);
+}
+
+/* =========================================================
+   RENDER
+========================================================= */
+
+function renderWorkers(workersToDisplay) {
+    const tableBody = document.getElementById("attendanceTableBody");
+    tableBody.innerHTML = "";
+
+    if (!workersToDisplay || workersToDisplay.length === 0) {
+        tableBody.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align:center;">
+                    ${
+                        currentSearchTerm
+                            ? "No workers match your search."
+                            : "No workers found."
+                    }
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    const groupedWorkers = {};
+
+    workersToDisplay.forEach(worker => {
+        const role = (worker.role || "Other").trim() || "Other";
+
+        if (!groupedWorkers[role]) {
+            groupedWorkers[role] = [];
+        }
+
+        groupedWorkers[role].push(worker);
+    });
+
+    const sortedRoles = Object.keys(groupedWorkers)
+        .sort((a, b) => a.localeCompare(b));
+
+    let workerNumber = 0;
+
+    sortedRoles.forEach(role => {
+        const roleWorkers = groupedWorkers[role];
+
+        roleWorkers.sort((a, b) =>
+            (a.fullname || "").localeCompare(b.fullname || "")
+        );
+
+        const roleRow = document.createElement("tr");
+        roleRow.className = "role-group-row";
+
+        roleRow.innerHTML = `
+            <td colspan="6">
+                ${escapeHtml(role)}
+                <span class="role-count">
+                    (${roleWorkers.length}
+                    worker${roleWorkers.length === 1 ? "" : "s"})
+                </span>
+            </td>
+        `;
+
+        tableBody.appendChild(roleRow);
+
+        roleWorkers.forEach(worker => {
+            workerNumber++;
+
+            const workerId = getWorkerId(worker);
+            const alreadyRecorded = recordedWorkerIds.has(workerId);
+
+            const row = document.createElement("tr");
+            row.dataset.workerId = workerId;
+
+            if (alreadyRecorded) {
+                row.classList.add("already-recorded-row");
+            }
+
+            row.innerHTML = `
+                <td>${workerNumber}</td>
+
+                <td class="worker-name">
+                    ${escapeHtml(worker.fullname || "-")}
+                </td>
+
+                <td>
+                    ${escapeHtml(worker.phone_number || "-")}
+                </td>
+
+                <td>
+                    <span class="role-badge">
+                        ${escapeHtml(worker.role || "-")}
+                    </span>
+                </td>
+
+                <td class="salary">
+                    ${formatSalary(worker.salary)}
+                </td>
+
+                <td>
+                    <div
+                        style="
+                            display:flex;
+                            gap:15px;
+                            align-items:center;
+                            flex-wrap:wrap;
+                        "
+                        class="${alreadyRecorded ? "attendance-disabled" : ""}"
+                    >
+                        <label>
+                            <input
+                                type="radio"
+                                name="attendance_${escapeHtml(workerId)}"
+                                value="present"
+                                data-worker-id="${escapeHtml(workerId)}"
+                                ${alreadyRecorded ? "disabled" : ""}
+                            >
+                            Present
+                        </label>
+
+                        <label>
+                            <input
+                                type="radio"
+                                name="attendance_${escapeHtml(workerId)}"
+                                value="absent"
+                                data-worker-id="${escapeHtml(workerId)}"
+                                ${alreadyRecorded ? "disabled" : ""}
+                            >
+                            Absent
+                        </label>
+
+                        ${
+                            alreadyRecorded
+                                ? `
+                                    <span class="attendance-status recorded">
+                                        ✓ Already Recorded
+                                    </span>
+                                  `
+                                : `
+                                    <span class="attendance-status not-recorded">
+                                        Not Recorded
+                                    </span>
+                                  `
+                        }
+                    </div>
+                </td>
+            `;
+
+            tableBody.appendChild(row);
+        });
+    });
+}
+
+/* =========================================================
+   CHECK ALL
+========================================================= */
+
+function checkAllPresent() {
+    workers.forEach(worker => {
+        const workerId = getWorkerId(worker);
+
+        if (recordedWorkerIds.has(workerId)) return;
+
+        const presentRadio = document.querySelector(
+            `input[name="attendance_${CSS.escape(workerId)}"][value="present"]`
+        );
+
+        if (presentRadio && !presentRadio.disabled) {
+            presentRadio.checked = true;
+        }
+    });
+}
+
+/* =========================================================
+   CLEAR
+========================================================= */
+
+function clearAttendance() {
+    document
+        .querySelectorAll('input[type="radio"]')
+        .forEach(radio => {
+            if (!radio.disabled) {
+                radio.checked = false;
+            }
+        });
+}
+
+/* =========================================================
+   SAVE ATTENDANCE TO PHP
+========================================================= */
+
+document.getElementById("attendanceForm").addEventListener(
+    "submit",
+    async function(event) {
+        event.preventDefault();
+
+        const button = document.getElementById("submitAttendanceBtn");
+
+        if (!workers || workers.length === 0) {
+            showMessage("There are no workers to process.");
+            return;
+        }
+
+        const attendanceData = [];
+
+        for (const worker of workers) {
+            const workerId = getWorkerId(worker);
+
+            if (recordedWorkerIds.has(workerId)) {
+                continue;
+            }
+
+            const selected = document.querySelector(
+                `input[name="attendance_${CSS.escape(workerId)}"]:checked`
+            );
+
+            if (!selected) {
+                showMessage(
+                    `Please select Present or Absent for ${worker.fullname}.`
+                );
+                return;
+            }
+
+            attendanceData.push({
+                id: workerId,
+                fullname: worker.fullname,
+                status: selected.value
+            });
+        }
+
+        if (attendanceData.length === 0) {
+            showMessage(
+                "All workers already have attendance recorded for today."
+            );
+            return;
+        }
+
+        button.disabled = true;
+        button.textContent = "Saving...";
+
+        try {
+            let successCount = 0;
+            let alreadyRecordedCount = 0;
+            let failedCount = 0;
+
+            const alreadyRecordedWorkers = [];
+            const failedWorkers = [];
+
+            for (const attendance of attendanceData) {
+                try {
+                    const response = await fetch(
+                        `${ATTENDANCE_API_URL}/register.php?id=${encodeURIComponent(attendance.id)}`,
+                        {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "Accept": "application/json"
+                            },
+                            body: JSON.stringify({
+                                status: attendance.status
+                            })
+                        }
+                    );
+
+                    let result = {};
+
+                    try {
+                        result = await response.json();
+                    } catch {
+                        result = {
+                            message: "Server returned an invalid response."
+                        };
+                    }
+
+                    if (response.status === 409) {
+                        alreadyRecordedCount++;
+                        alreadyRecordedWorkers.push(attendance.fullname);
+                        continue;
+                    }
+
+                    if (!response.ok || result.success === false) {
+                        failedCount++;
+
+                        failedWorkers.push(
+                            `${attendance.fullname}: ${
+                                result.message ||
+                                "Failed to save attendance."
+                            }`
+                        );
+
+                        continue;
+                    }
+
+                    successCount++;
+
+                } catch (workerError) {
+                    failedCount++;
+
+                    failedWorkers.push(
+                        `${attendance.fullname}: ${
+                            workerError.message || "Network error."
+                        }`
+                    );
+                }
+            }
+
+            await loadTodayAttendance();
+            filterWorkers();
+
+            let finalMessage = "";
+
+            if (successCount > 0) {
+                finalMessage +=
+                    `✓ ${successCount} attendance record(s) saved successfully.\n`;
+            }
+
+            if (alreadyRecordedCount > 0) {
+                finalMessage +=
+                    `\n⚠ ${alreadyRecordedCount} worker(s) were already recorded today.`;
+            }
+
+            if (failedCount > 0) {
+                finalMessage +=
+                    `\n\n✗ ${failedCount} attendance record(s) failed.`;
+
+                if (failedWorkers.length > 0) {
+                    finalMessage +=
+                        `Failed to record attendance`;
+                }
+            }
+
+            if (alreadyRecordedWorkers.length > 0) {
+                finalMessage +=
+                    `Already recorded today`;
+            }
+
+            if (!finalMessage) {
+                finalMessage = "No attendance was saved.";
+            }
+
+            showMessage(finalMessage);
+            clearAttendance();
+
+        } catch (error) {
+            console.error("Attendance error:", error);
+
+            showMessage(
+                error.message || "Failed to save attendance."
+            );
+
+        } finally {
+            button.disabled = false;
+            button.textContent = "Save Attendance";
+        }
+    }
+);
+
+/* =========================================================
+   PAGE LOAD
+========================================================= */
+
+document.addEventListener("DOMContentLoaded", function() {
+    loadWorkers();
+
+    const searchInput =
+        document.getElementById("attendanceSearch");
+
+    if (searchInput) {
+        searchInput.addEventListener("input", filterWorkers);
+    }
+});
+
+
+  
+
+</script>
+  <!-- JavaScript for Mobile Sidebar & Stock Submenu Toggle -->
+    <script>
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const closeSidebar = document.getElementById('closeSidebar');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarBackdrop = document.getElementById('sidebarBackdrop');
+
+        const stockToggle = document.getElementById('stockToggle');
+        const stockSubmenu = document.getElementById('stockSubmenu');
+        const stockChevron = document.getElementById('stockChevron');
+
+        function toggleSidebar() {
+            sidebar.classList.toggle('-translate-x-full');
+            sidebarBackdrop.classList.toggle('hidden');
+        }
+
+        hamburgerBtn.addEventListener('click', toggleSidebar);
+        closeSidebar.addEventListener('click', toggleSidebar);
+        sidebarBackdrop.addEventListener('click', toggleSidebar);
+
+        // Stock Submenu Toggle
+        stockToggle.addEventListener('click', () => {
+            stockSubmenu.classList.toggle('hidden');
+            stockChevron.classList.toggle('rotate-180');
+        });
+
+        // Active link switching visual effect
+        const navLinks = document.querySelectorAll('aside nav a');
+        navLinks.forEach(link => {
+            link.addEventListener('click', function(e) {
+                navLinks.forEach(l => {
+                    if(!l.closest('#stockSubmenu')) {
+                        l.classList.remove('bg-primary', 'text-white', 'shadow-md');
+                        l.classList.add('text-gray-600', 'hover:bg-primaryLight', 'hover:text-primary');
+                    }
+                });
+                if(!this.closest('#stockSubmenu')) {
+                    this.classList.remove('text-gray-600', 'hover:bg-primaryLight', 'hover:text-primary');
+                    this.classList.add('bg-primary', 'text-white', 'shadow-md');
+                }
+                if (window.innerWidth < 1024) {
+                    toggleSidebar();
+                }
+            });
+        });
+    </script>
+<script>
+(function () {
+    "use strict";
+
+    const currentPage = window.location.pathname;
+    const loginPage = "index.html";
+
+    // Ntukongere kugenzura login uri kuri index.html
+    if (
+        currentPage.endsWith("/index.html") ||
+        currentPage === "/" ||
+        currentPage.endsWith("/")
+    ) {
+        return;
+    }
+
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    // Reba niba amakuru ya login ahari
+    if (!token && !user) {
+        sessionStorage.setItem(
+            "redirectAfterLogin",
+            window.location.href
+        );
+
+        window.location.replace(loginPage);
+    }
+})();
+</script>
+</body>
+</html>

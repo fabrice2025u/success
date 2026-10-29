@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+>
+<link rel="icon" type="image/x-icon" href="unnamed.png">
+
+<title>Register | Worker System</title>
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+<style>
+:root{--red:#c62828;--red-dark:#a61f24;--red-soft:#fff1f1;--ink:#20232b;--muted:#747b87;--line:#e5e7eb;--white:#fff;--shadow:0 24px 70px rgba(35,25,25,.12)}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(135deg,#fff 0%,#fff7f7 55%,#fdeaea 100%);font-family:Inter,"Segoe UI",Roboto,Arial,sans-serif;color:var(--ink)}
+.auth-container{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:36px 18px}
+.auth-card.register-card{width:min(100%,540px);background:var(--white);border:1px solid rgba(198,40,40,.10);border-radius:24px;padding:34px 38px;box-shadow:var(--shadow);position:relative;overflow:hidden}
+.auth-card.register-card:before{content:"";position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(90deg,var(--red-dark),#ef5350,#ffc1c1)}
+.logo{display:flex;align-items:center;justify-content:center;gap:12px;margin-bottom:28px}
+.logo-icon{width:48px;height:48px;border-radius:15px;background:var(--red);color:#fff;display:grid;place-items:center;font-weight:800;font-size:24px;box-shadow:0 8px 18px rgba(198,40,40,.22)}
+.logo h1{font-size:25px;letter-spacing:-.8px;margin:0;font-weight:800;color:#20232b}
+.logo h1 span{color:var(--red)}
+.form-header{text-align:center;margin-bottom:28px}
+.form-header h2{font-size:25px;letter-spacing:-.5px;margin:0 0 8px;font-weight:750}
+.form-header h2 i{color:var(--red);margin-right:7px;font-size:21px}
+.form-header p{margin:0;color:var(--muted);font-size:14px}
+#registerForm{display:grid;grid-template-columns:1fr 1fr;gap:19px 16px}
+.input-group{min-width:0;margin:0}
+.input-group label{display:block;font-size:13px;font-weight:700;color:#343944;margin-bottom:8px}
+.input-group label span{color:var(--red)!important}
+.input-wrapper{display:flex;align-items:center;gap:11px;min-height:49px;border:1px solid var(--line);border-radius:12px;padding:0 14px;background:#fff;transition:border-color .2s,box-shadow .2s,background .2s}
+.input-wrapper:focus-within{border-color:var(--red);background:#fff;box-shadow:0 0 0 4px rgba(198,40,40,.09)}
+.input-icon{color:var(--red);font-size:15px;width:18px;text-align:center;flex:0 0 18px}
+.input-wrapper input,.input-wrapper select{width:100%;min-width:0;border:0;outline:0;background:transparent;color:var(--ink);font:inherit;font-size:13px;padding:14px 0}
+.input-wrapper input::placeholder{color:#a1a6af}
+.input-wrapper select{cursor:pointer}
+#registerForm .input-group:nth-child(5){grid-column:1/-1}
+.btn-primary{grid-column:1/-1;width:100%;min-height:51px;margin-top:5px;border:0;border-radius:12px;background:linear-gradient(135deg,var(--red),var(--red-dark));color:#fff;font-size:14px;font-weight:750;letter-spacing:.1px;cursor:pointer;box-shadow:0 9px 18px rgba(198,40,40,.2);transition:transform .2s,box-shadow .2s,opacity .2s}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 12px 24px rgba(198,40,40,.27)}
+.btn-primary:disabled{cursor:wait;opacity:.7;transform:none}
+@media(max-width:520px){.auth-container{padding:18px 12px}.auth-card.register-card{padding:28px 20px;border-radius:19px}#registerForm{grid-template-columns:1fr;gap:16px}.input-group,#registerForm .input-group:nth-child(5),.btn-primary{grid-column:1}.form-header h2{font-size:22px}.logo{margin-bottom:24px}}
+</style>
+
+
+</head>
+
+<body>
+
+<div class="auth-container">
+
+
+<div class="auth-card register-card">
+
+
+    <!-- ================================
+         LOGO
+    ================================= -->
+
+    <div class="logo">
+
+        <div class="logo-icon">
+            W
+        </div>
+
+        <h1>
+            Worker<span>System</span>
+        </h1>
+
+    </div>
+
+
+    <!-- ================================
+         HEADER
+    ================================= -->
+
+    <div class="form-header">
+
+        <h2>
+            <i class="fa-solid fa-user-plus" aria-hidden="true"></i> Register Worker
+        </h2>
+
+        <p>
+            Create a new worker account
+        </p>
+
+    </div>
+
+
+    <!-- ================================
+         REGISTER FORM
+    ================================= -->
+
+    <form id="registerForm">
+
+
+        <!-- ================================
+             FULL NAME - REQUIRED
+        ================================= -->
+
+        <div class="input-group">
+
+            <label for="fullname">
+                Full Name <span style="color:red;">*</span>
+            </label>
+
+            <div class="input-wrapper">
+
+                <span class="input-icon">
+                    <i class="fa-solid fa-user" aria-hidden="true"></i>
+                </span>
+
+                <input
+                    type="text"
+                    id="fullname"
+                    name="fullname"
+                    placeholder="Enter worker full name"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================
+             PHONE NUMBER - REQUIRED
+        ================================= -->
+
+        <div class="input-group">
+
+            <label for="phone">
+                Phone Number <span style="color:red;">*</span>
+            </label>
+
+            <div class="input-wrapper">
+
+                <span class="input-icon">
+                    <i class="fa-solid fa-mobile-screen-button" aria-hidden="true"></i>
+                </span>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone_number"
+                    placeholder="Enter phone number"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================
+             ID NUMBER - REQUIRED
+        ================================= -->
+
+        <div class="input-group">
+
+            <label for="id_number">
+                ID Number <span style="color:red;">*</span>
+            </label>
+
+            <div class="input-wrapper">
+
+                <span class="input-icon">
+                    <i class="fa-solid fa-id-card" aria-hidden="true"></i>
+                </span>
+
+                <input
+                    type="text"
+                    id="id_number"
+                    name="id_number"
+                    placeholder="Enter ID number"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================
+             ROLE - OPTIONAL
+        ================================= -->
+
+<div class="input-group">
+
+    <label for="role">
+        Role
+    </label>
+
+    <div class="input-wrapper">
+
+        <span class="input-icon">
+            <i class="fa-solid fa-helmet-safety" aria-hidden="true"></i>
+        </span>
+
+        <select
+            id="role"
+            name="role"
+        >
+            <option value="" disabled selected>
+                Select worker role
+            </option>
+
+            <option value="Junior Leader">
+                Junior Leader
+            </option>
+            
+             <option value="Senior Leader">
+                Senior Leader
+            </option>
+
+            <option value="Senior Carpenter">
+                Senior Carpenter
+            </option>
+            
+            <option value="Junior Carpenter">
+                Junior Carpenter
+            </option>
+     
+            <option value="Junior Steelfixer">
+                Junior Steelfixer
+            </option>
+            
+            <option value="Senior Steelfixer">
+                Senior Steelfixer
+            </option>
+
+            <option value="Senior Mason">
+                Senior Mason
+            </option>
+             <option value="Junior Mason">
+               Junior Mason
+            </option>
+            
+            <option value="Senior Labour">
+                Senior Labour
+            </option>
+            
+             <option value="Junior Labour">
+                Junior Labour
+            </option>
+           
+            <option value="Trainee">
+                Trainee
+            </option>
+            
+            <option value="Unkown">
+                Unkown
+            </option>
+
+        </select>
+
+    </div>
+
+</div>
+
+
+
+        <!-- ================================
+             SALARY - REQUIRED
+        ================================= -->
+
+        <div class="input-group">
+
+            <label for="salary">
+                Salary Per Day
+                <span style="color:red;">*</span>
+            </label>
+
+            <div class="input-wrapper">
+
+                <span class="input-icon">
+                    <i class="fa-solid fa-wallet" aria-hidden="true"></i>
+                </span>
+
+                <input
+                    type="number"
+                    id="salary"
+                    name="salary"
+                    placeholder="Enter salary per day"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- ================================
+             LEVEL OF STUDIES
+        ================================= -->
+
+        <div class="input-group">
+
+            <label for="ls">Level of Studies</label>
+
+            <div class="input-wrapper">
+                <span class="input-icon">
+                    <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+                </span>
+                <input
+                    type="text"
+                    id="ls"
+                    name="ls"
+                    placeholder="Enter level of studies"
+                >
+            </div>
+
+        </div>
+
+
+        <!-- ================================
+             REGISTER BUTTON
+        ================================= -->
+
+        <button
+            type="submit"
+            class="btn-primary"
+            id="registerButton"
+        >
+            <i class="fa-solid fa-user-check" aria-hidden="true"></i> Register Worker
+        </button>
+
+
+    </form>
+
+</div>
+
+</div>
+
+<!-- =====================================================
+     JAVASCRIPT
+====================================================== -->
+
+
+<script>
+document.getElementById("registerForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const fullname = document.getElementById("fullname").value.trim();
+    const phone = document.getElementById("phone").value.trim();
+    const id_number = document.getElementById("id_number").value.trim();
+    const role = document.getElementById("role").value.trim();
+    const salary = document.getElementById("salary").value.trim();
+    const ls = document.getElementById("ls").value.trim();
+
+    // Validate required fields
+    if (!fullname) {
+        alert("Full name is required.");
+        document.getElementById("fullname").focus();
+        return;
+    }
+
+    if (!phone) {
+        alert("Phone number is required.");
+        document.getElementById("phone").focus();
+        return;
+    }
+
+    if (!id_number) {
+        alert("ID number is required.");
+        document.getElementById("id_number").focus();
+        return;
+    }
+
+    if (salary === "") {
+        alert("Salary per day is required.");
+        document.getElementById("salary").focus();
+        return;
+    }
+
+    // Validate salary
+    const salaryValue = Number(salary);
+
+    if (!Number.isFinite(salaryValue) || salaryValue < 0) {
+        alert("Please enter a valid salary per day.");
+        document.getElementById("salary").focus();
+        return;
+    }
+
+    const registerButton = document.getElementById("registerButton");
+    const originalHTML = registerButton.innerHTML;
+
+    registerButton.disabled = true;
+    registerButton.textContent = "Registering...";
+
+    // Worker data sent to PHP API
+    const workerData = {
+        fullname: fullname,
+        phone_number: phone,
+        id_number: id_number,
+        role: role || "",
+        salary: salaryValue,
+        ls: ls
+    };
+
+    console.log("DATA BEING SENT:", workerData);
+
+    try {
+        const response = await fetch(
+            "https://mail.placomltd.co.rw/success-php/api/workers/register.php",
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Accept": "application/json"
+                },
+                body: JSON.stringify(workerData)
+            }
+        );
+
+        // Read response as text first to handle HTML errors safely
+        const responseText = await response.text();
+
+        let data;
+
+        try {
+            data = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error("Invalid server response:", responseText);
+            throw new Error(
+                "The server returned an invalid response (HTTP " +
+                response.status +
+                "). Check the PHP API URL, server errors, or hosting firewall."
+            );
+        }
+
+        console.log("REGISTER STATUS:", response.status);
+        console.log("REGISTER RESPONSE:", data);
+
+        if (!response.ok) {
+            alert(
+                data.message ||
+                "Failed to register worker. HTTP status: " + response.status
+            );
+            return;
+        }
+
+        // Some PHP APIs return an error message with HTTP 200.
+        if (data.success === false || data.status === "error") {
+            alert(data.message || "Failed to register worker.");
+            return;
+        }
+
+        alert(data.message || "Worker registered successfully!");
+
+        document.getElementById("registerForm").reset();
+
+        window.location.href = "worker.html";
+
+    } catch (error) {
+        console.error("REGISTER ERROR:", error);
+
+        alert(
+            "Unable to complete worker registration.\n\n" +
+            error.message +
+            "\n\nCheck your internet connection and PHP API configuration."
+        );
+
+    } finally {
+        registerButton.disabled = false;
+        registerButton.innerHTML = originalHTML;
+    }
+});
+</script>
+
+
+</body>
+
+</html>
